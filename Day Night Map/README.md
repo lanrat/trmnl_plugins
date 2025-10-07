@@ -2,6 +2,8 @@
 
 A real-time visualization of day and night regions across the world using accurate solar and lunar positioning calculations. Powered by the [Day Night Map](https://lanrat.github.io/day-night-map/) project.
 
+![Screenshot](screenshot.png)
+
 ## Description
 
 This plugin displays a live world map showing current day and night zones based on the sun and moon positions. It can optionally display your location and show sunrise/sunset times for your coordinates.

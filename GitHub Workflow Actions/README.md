@@ -2,6 +2,8 @@
 
 A TRMNL plugin that displays the status of GitHub Actions workflows on your e-ink display.
 
+![Screenshot](screenshot.png)
+
 ## Description
 
 This plugin monitors GitHub Actions workflows for specified users and repositories, displaying their current status and recent activity.
