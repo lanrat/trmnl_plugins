@@ -1,0 +1,62 @@
+{% template comic %}
+<div class="view bg-white">
+  <div class="image-container">
+    {% if items %}
+    <div id="description" style="display: none;">{{ items[0]description }}</div>
+    <!-- <img src="{{ items[0]image }}" class="image image-dither" /> -->
+    <!-- {{ items[0]description }} -->
+    <img id="comic" class="image image-dither" />
+    <script>
+      const comicElement = document.getElementById('comic');
+      const descriptionElement = document.getElementById('description');
+      const imageUrl = descriptionElement.querySelector('img').src;
+      comicElement.src = imageUrl;
+    </script>
+    {% else %}
+    <p class="text--black">Error Loading Image</p>
+    {% endif %}
+  </div>
+  <div class="title_bar">
+    <!-- <span class="text-stroke">Comic/span> -->
+    {% if items %}
+    <span class="instance text-stroke">{{ items[0]title | strip_html }}</span>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    min-height: 0; /* Important for flex children */
+  }
+
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 5px;
+  }
+
+  .title_bar {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+</style>
+{% endtemplate %}

@@ -1,0 +1,417 @@
+<style>
+/* GitHub Actions Plugin - Minimal Custom Styles */
+
+
+/* Status icon in meta area */
+.gh-status-icon {
+  display: block;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Status badge backgrounds (for full layout only) */
+.gh-badge-success {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 1px,
+    rgba(0,0,0,0.06) 1px,
+    rgba(0,0,0,0.06) 2px
+  );
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+.gh-badge-failure {
+  background: #000;
+  color: #fff;
+}
+
+.gh-badge-cancelled {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 1px,
+    rgba(0,0,0,0.15) 1px,
+    rgba(0,0,0,0.15) 2px
+  );
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+.gh-badge-running {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(0,0,0,0.08),
+    rgba(0,0,0,0.08) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.gh-badge-queued {
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.15);
+  border-style: dotted;
+}
+</style>
+
+<script>
+// GitHub Actions Monitor - Data Fetching Script using GraphQL
+document.addEventListener("DOMContentLoaded", function(e) {
+  const config = {{ trmnl.plugin_settings.custom_fields_values | json }};
+
+  const githubUsernames = (config.github_usernames || '').split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+  const githubRepos = (config.github_repos || '').split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+  const githubPat = config.github_pat || '';
+  const maxAgeDays = parseInt(config.max_age_days) || 30;
+
+  if (!githubPat) {
+    console.error('GitHub Personal Access Token is required for GraphQL API');
+    renderWorkflows([]);
+    return;
+  }
+
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - maxAgeDays);
+
+  const startTime = performance.now();
+
+  // Build GraphQL query with aliases for multiple users/orgs and repos
+  const userQueries = githubUsernames.map(function(username, i) {
+    return `
+      user${i}: repositoryOwner(login: "${username}") {
+        repositories(first: 10, orderBy: {field: PUSHED_AT, direction: DESC}) {
+          nodes {
+            nameWithOwner
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  checkSuites(first: 10) {
+                    nodes {
+                      status
+                      conclusion
+                      createdAt
+                      updatedAt
+                      databaseId
+                      workflowRun {
+                        workflow {
+                          name
+                        }
+                        databaseId
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+  }).join('\n');
+
+  const repoQueries = githubRepos.map(function(repo, i) {
+    const parts = repo.split('/');
+    const owner = parts[0];
+    const name = parts[1];
+    return `
+      repo${i}: repository(owner: "${owner}", name: "${name}") {
+        nameWithOwner
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              checkSuites(first: 10) {
+                nodes {
+                  status
+                  conclusion
+                  createdAt
+                  updatedAt
+                  databaseId
+                  workflowRun {
+                    workflow {
+                      name
+                    }
+                    databaseId
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+  }).join('\n');
+
+  const query = `
+    query {
+      ${userQueries}
+      ${repoQueries}
+    }
+  `;
+
+  console.log('Fetching workflows via GraphQL...');
+
+  fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Authorization': `bearer ${githubPat}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query: query })
+  })
+    .then(function(response) { return response.json(); })
+    .then(function(result) {
+      const endTime = performance.now();
+      console.log(`GraphQL query completed in ${Math.round(endTime - startTime)}ms`);
+
+      if (result.errors) {
+        console.error('GraphQL errors:', result.errors);
+        result.errors.forEach(function(error, i) {
+          console.error(`Error ${i + 1}:`, error.message);
+          console.error('Path:', error.path);
+          console.error('Locations:', error.locations);
+        });
+        renderWorkflows([]);
+        return;
+      }
+
+      const workflowMap = new Map();
+      const data = result.data;
+
+      // Process all user and repo data
+      Object.keys(data).forEach(function(key) {
+        const item = data[key];
+
+        // Handle user repositories
+        if (item.repositories) {
+          item.repositories.nodes.forEach(function(repo) {
+            processRepository(repo, workflowMap, cutoffDate);
+          });
+        }
+        // Handle individual repositories
+        else if (item.nameWithOwner) {
+          processRepository(item, workflowMap, cutoffDate);
+        }
+      });
+
+      // Convert to array and sort
+      const workflows = Array.from(workflowMap.values())
+        .sort(function(a, b) {
+          return new Date(b.run_started_at) - new Date(a.run_started_at);
+        });
+
+      console.log(`Found ${workflows.length} workflows`);
+
+      // Render workflows into the DOM
+      renderWorkflows(workflows);
+
+      // Dispatch custom event for loading complete
+      window.dispatchEvent(new CustomEvent('trmnl-plugin-loaded', {
+        detail: { plugin: 'github-actions', workflowCount: workflows.length }
+      }));
+    })
+    .catch(function(error) {
+      console.error('Error fetching GraphQL data:', error);
+      renderWorkflows([]);
+    });
+
+  function processRepository(repo, workflowMap, cutoffDate) {
+    if (!repo.defaultBranchRef || !repo.defaultBranchRef.target || !repo.defaultBranchRef.target.checkSuites) {
+      return;
+    }
+
+    const checkSuites = repo.defaultBranchRef.target.checkSuites.nodes;
+    checkSuites.forEach(function(checkSuite) {
+      if (!checkSuite.workflowRun || !checkSuite.workflowRun.workflow) return;
+
+      const runDate = new Date(checkSuite.createdAt);
+
+      if (runDate >= cutoffDate) {
+        const key = `${repo.nameWithOwner}-${checkSuite.databaseId}`;
+
+        if (!workflowMap.has(key)) {
+          workflowMap.set(key, {
+            repository: repo.nameWithOwner,
+            workflow_id: checkSuite.databaseId,
+            name: checkSuite.workflowRun.workflow.name,
+            status: checkSuite.status.toLowerCase(),
+            conclusion: checkSuite.conclusion ? checkSuite.conclusion.toLowerCase() : null,
+            run_started_at: checkSuite.createdAt
+          });
+        }
+      }
+    });
+  }
+});
+
+function renderWorkflows(workflows) {
+  console.log('Workflows fetched:', workflows.length);
+
+  // Find all workflow containers
+  const containers = document.querySelectorAll('[data-gh-workflows]');
+
+  containers.forEach(container => {
+    const maxItems = parseInt(container.dataset.maxItems) || workflows.length;
+    const layout = container.dataset.layout || 'full';
+    const visibleWorkflows = workflows.slice(0, maxItems);
+
+    // Check if this container uses overflow engine (direct children) or single column
+    const useOverflow = container.dataset.overflow === 'true';
+    const targetElement = useOverflow ? container : container.querySelector('.column');
+
+    if (!targetElement) {
+      console.error('No target element found for rendering');
+      return;
+    }
+
+    if (visibleWorkflows.length === 0) {
+      targetElement.innerHTML = getEmptyState(layout);
+      return;
+    }
+
+    // Group workflows by repository
+    const groupedByRepo = {};
+    visibleWorkflows.forEach(workflow => {
+      if (!groupedByRepo[workflow.repository]) {
+        groupedByRepo[workflow.repository] = [];
+      }
+      groupedByRepo[workflow.repository].push(workflow);
+    });
+
+    // Clear target and insert items
+    targetElement.innerHTML = '';
+    Object.entries(groupedByRepo).forEach(([repo, repoWorkflows]) => {
+      targetElement.innerHTML += renderRepoGroup(repo, repoWorkflows, layout);
+    });
+
+    // Add footer if there are more workflows (only for full layout)
+    if (workflows.length > maxItems && layout === 'full') {
+      const footer = document.createElement('div');
+      footer.className = 'pt-md text-xs text-gray-600 text-center';
+      footer.textContent = `Showing ${maxItems} of ${workflows.length} workflows`;
+      container.parentElement.appendChild(footer);
+    }
+  });
+}
+
+function renderRepoGroup(repo, workflows, layout) {
+  if (workflows.length === 1) {
+    // Single workflow: show repo + workflow name in title
+    const workflow = workflows[0];
+    const statusIcon = getStatusIcon(workflow);
+    const statusBadge = getStatusBadge(workflow, layout);
+    const formattedDate = formatDate(workflow.run_started_at);
+    const showBadge = layout === 'full';
+    const title = `${workflow.repository} · ${workflow.name || 'Workflow'}`;
+
+    return `
+      <div class="item">
+        <div class="meta">
+          <span class="gh-status-icon">${statusIcon}</span>
+        </div>
+        <div class="content">
+          <span class="title title--small">${escapeHtml(title)}</span>
+          <span class="description">${formattedDate}${showBadge && statusBadge ? ' · ' + statusBadge : ''}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Multiple workflows: show repo name as title, workflows as description lines
+  // Determine overall status: only show success if ALL workflows succeeded
+  const hasFailure = workflows.some(w => w.conclusion === 'failure');
+  const hasCancelled = workflows.some(w => w.conclusion === 'cancelled');
+  const hasInProgress = workflows.some(w => w.status === 'in_progress' || w.status === 'queued');
+  const allSuccess = workflows.every(w => w.conclusion === 'success');
+
+  let overallIcon;
+  if (hasFailure) {
+    overallIcon = '✗';  // Show failure if any workflow failed
+  } else if (hasCancelled) {
+    overallIcon = '⊘';  // Show cancelled if any workflow cancelled (and none failed)
+  } else if (hasInProgress) {
+    overallIcon = '◷';  // Show in progress if any workflow is running (and none failed/cancelled)
+  } else if (allSuccess) {
+    overallIcon = '✓';  // Show success only if all workflows succeeded
+  } else {
+    overallIcon = '○';  // Default for other states
+  }
+
+  let workflowLines = workflows.map(workflow => {
+    const statusBadge = getStatusBadge(workflow, layout);
+    const formattedDate = formatDate(workflow.run_started_at);
+    const showBadge = layout === 'full';
+    return `${workflow.name || 'Workflow'} (${formattedDate}${showBadge && statusBadge ? ' · ' + statusBadge : ''})`;
+  }).join(' • ');
+
+  return `
+    <div class="item">
+      <div class="meta">
+        <span class="gh-status-icon">${overallIcon}</span>
+      </div>
+      <div class="content">
+        <span class="title title--small">${escapeHtml(repo)}</span>
+        <span class="description">${workflowLines}</span>
+      </div>
+    </div>
+  `;
+}
+
+function getStatusIcon(workflow) {
+  if (workflow.conclusion === 'success') return '✓';
+  if (workflow.conclusion === 'failure') return '✗';
+  if (workflow.conclusion === 'cancelled') return '⊘';
+  if (workflow.status === 'in_progress' || workflow.status === 'queued') return '◷';
+  return '○';
+}
+
+function getStatusBadge(workflow, layout) {
+  // Only show badges in full layout
+  if (layout !== 'full') return '';
+
+  // Return simple status text (will be shown in description line)
+  if (workflow.conclusion === 'success') return '✓ Pass';
+  if (workflow.conclusion === 'failure') return '✗ Fail';
+  if (workflow.conclusion === 'cancelled') return 'Cancelled';
+  if (workflow.status === 'in_progress') return 'Running';
+  if (workflow.status === 'queued') return 'Queued';
+  return escapeHtml(workflow.status);
+}
+
+function getEmptyState(layout) {
+  return `
+    <div class="text-center opacity-60">
+      <div style="font-size: 2em; margin-bottom: 0.5em;">⚙</div>
+      <div class="description">No workflows found</div>
+    </div>
+  `;
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 60) {
+    return `${diffMins}m ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours}h ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays}d ago`;
+  } else {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[date.getMonth()]} ${date.getDate()}`;
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+</script>

@@ -1,0 +1,21 @@
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevents scrollbars on the main page if iframe content is larger */
+  }
+
+  iframe {
+    position: fixed; /* Positions the iframe relative to the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* 100% of viewport width */
+    height: 100vh; /* 100% of viewport height */
+    border: none;
+    overflow: auto; /* Allows scrolling within the iframe if its content overflows */
+  }
+</style>
+<div class="layout layout--col gap--space-between image-dither" data-pixel-perfect="true">
+  <iframe src="https://lanrat.github.io/day-night-map/?minimal&grayscale&timezone={{trmnl.user.time_zone_iana}}&lat={{trmnl.plugin_settings.custom_fields_values.latitude}}&lon={{trmnl.plugin_settings.custom_fields_values.longitude}}&{{trmnl.plugin_settings.custom_fields_values.showloc}}&{{trmnl.plugin_settings.custom_fields_values.nosun}}&{{trmnl.plugin_settings.custom_fields_values.nomoon}}&{{trmnl.plugin_settings.custom_fields_values.hour24}}"></iframe>
+</div>

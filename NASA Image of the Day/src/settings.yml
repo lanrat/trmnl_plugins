@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://www.nasa.gov/feeds/iotd-feed/
+polling_headers: ''
+polling_body: ''
+id: 76645
+custom_fields:
+- keyname: doesnt_matter
+  name: NASA Image of the Day
+  field_type: author_bio
+  description: Displays NASA's image of the day
+  github_url: https://github.com/lanrat
+  learn_more_url: https://lanrat.com/
+name: NASA Image of the Day
+refresh_interval: 120

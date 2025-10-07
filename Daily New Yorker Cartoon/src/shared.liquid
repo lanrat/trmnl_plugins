@@ -1,0 +1,227 @@
+{% template comic %}
+<div class="view bg-white">
+  <div class="image-container">
+    <img id="comic" class="image image-dither image--dither" crossorigin="anonymous"/>
+    <p class="text--black;" style="display: none;" id="error">Error Loading Image</p>
+  </div>
+  <div class="caption-container">
+    <p id="caption" class="value value--xsmall caption text--center" data-pixel-perfect="true" data-content-limiter="true"></p>
+  </div>
+</div>
+{% endtemplate %}
+
+<script>
+  function getLatestComic() {
+    // The URL is now prefixed with the CORS proxy to avoid cross-origin issues
+    const cartoonsURL = 'https://corsproxy.io/?https://www.newyorker.com/latest/cartoons';
+    // Fetch the HTML content of the page via the proxy
+    return fetch(cartoonsURL)
+      .then(cartoonsResponse => cartoonsResponse.text())
+      .then(cartoonsHTML => {
+        // Parse the HTML string into a DOM document
+        const parser = new DOMParser();
+        const cartoonsDoc = parser.parseFromString(cartoonsHTML, 'text/html');
+        // Use document.evaluate with an XPath expression
+        const firstCartoon = cartoonsDoc.evaluate(
+          "//a[starts-with(., 'Daily Cartoon')]", 
+          cartoonsDoc, 
+          null, 
+          XPathResult.FIRST_ORDERED_NODE_TYPE, 
+          null
+        ).singleNodeValue;
+        // The 'comicLink' variable now holds the element, or 'null' if not found
+       if (!firstCartoon) {
+          return null;
+        }
+        const comicURL = `https://corsproxy.io/?https://www.newyorker.com${firstCartoon.getAttribute('href')}`;
+        // Fetch the HTML content of the page via the proxy
+        return fetch(comicURL)
+          .then(dailyResponse => dailyResponse.text())
+          .then(dailyHTML => {
+            // Parse the HTML string into a DOM document
+            const dailyDoc = parser.parseFromString(dailyHTML, 'text/html');
+            const pictureElement = dailyDoc.evaluate(
+              "//picture[contains(@class, 'responsive-cartoon__image')]", 
+              dailyDoc, 
+              null, 
+              XPathResult.FIRST_ORDERED_NODE_TYPE, 
+              null
+            ).singleNodeValue;
+            const imgElement = pictureElement.querySelector('img');
+            if (!imgElement) {
+              return null;
+            }
+            var comic = {
+              url: imgElement.src
+            };
+            // find the caption, if set
+            const captionElement = dailyDoc.evaluate(
+              "//span[contains(@class, 'caption__text')]", 
+              dailyDoc, 
+              null, 
+              XPathResult.FIRST_ORDERED_NODE_TYPE, 
+              null
+            ).singleNodeValue;
+            if (captionElement) {
+              comic.caption = captionElement.textContent;
+            }
+            return comic;
+          });
+      });
+  }
+
+  /**
+   * The core function to remove blank space from an image.
+   * @param {HTMLImageElement} imageObject The image element to process.
+   * @returns {string} A data URL of the cropped image.
+   */
+  function removeImageBlanks(imageObject) {
+    // Use naturalWidth/Height to get the actual image dimensions
+    const imgWidth = imageObject.naturalWidth;
+    const imgHeight = imageObject.naturalHeight;
+    const canvas = document.createElement('canvas');
+    canvas.width = imgWidth;
+    canvas.height = imgHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(imageObject, 0, 0);
+    let imageData;
+    try {
+      // This is the line that will throw a security error if the canvas is "tainted"
+      imageData = context.getImageData(0, 0, imgWidth, imgHeight);
+    } catch (e) {
+      console.error("CORS Error:", e);
+      return null;
+    }
+    const data = imageData.data;
+    const getRBG = (x, y) => {
+      const offset = (imgWidth * y + x) * 4;
+      return {
+        red: data[offset],
+        green: data[offset + 1],
+        blue: data[offset + 2],
+        opacity: data[offset + 3]
+      };
+    };
+    const isWhite = (rgb) => {
+      // Check for transparent pixels first, then for "white-ish" pixels.
+      return rgb.opacity < 10 || (rgb.red > 220 && rgb.green > 220 && rgb.blue > 220);
+    };
+    const scanY = (fromTop) => {
+      const offset = fromTop ? 1 : -1;
+      for (let y = fromTop ? 0 : imgHeight - 1; fromTop ? y < imgHeight : y > -1; y += offset) {
+        for (let x = 0; x < imgWidth; x++) {
+          if (!isWhite(getRBG(x, y))) return y;
+        }
+      }
+      return null;
+    };
+    const scanX = (fromLeft) => {
+      const offset = fromLeft ? 1 : -1;
+      for (let x = fromLeft ? 0 : imgWidth - 1; fromLeft ? x < imgWidth : x > -1; x += offset) {
+        for (let y = 0; y < imgHeight; y++) {
+          if (!isWhite(getRBG(x, y))) return x;
+        }
+      }
+      return null;
+    };
+    const cropTop = scanY(true);
+    if (cropTop === null) {
+      return imageObject.src; // Return original if blank
+    }
+    const cropBottom = scanY(false);
+    const cropLeft = scanX(true);
+    const cropRight = scanX(false);
+    const cropWidth = cropRight - cropLeft + 1;
+    const cropHeight = cropBottom - cropTop + 1;
+    const cropCanvas = document.createElement('canvas');
+    cropCanvas.width = cropWidth;
+    cropCanvas.height = cropHeight;
+    const cropContext = cropCanvas.getContext('2d');
+    cropContext.drawImage(imageObject,
+                          cropLeft, cropTop, cropWidth, cropHeight,
+                          0, 0, cropWidth, cropHeight);
+    return cropCanvas.toDataURL();
+  }
+
+  function init() {
+    getLatestComic()
+      .then(nycomic => {
+        const comicElement = document.getElementById('comic');
+        const errElement = document.getElementById('error');
+        const captionElement = document.getElementById('caption');
+        if (nycomic) {
+          // set onload to crop the image once its retrieved
+          comicElement.onload = function() {
+            // prevent infinite recursion
+            comicElement.onload = null;
+            // update the image to the cropped version
+            const img_data = removeImageBlanks(comicElement);
+            comicElement.src = img_data;
+          }
+          // request the comic image
+          comicElement.src = `https://corsproxy.io/?${nycomic.url}`;
+          // set the caption if there is one
+          if (nycomic.caption) {
+            captionElement.textContent = nycomic.caption;
+          }
+        } else {
+          // show error
+          errElement.style.display = '';
+          comicElement.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        // show error
+        const comicElement = document.getElementById('comic');
+        const errElement = document.getElementById('error');
+        errElement.style.display = '';
+        comicElement.style.display = 'none';
+      });
+  }
+
+  // Call the function when page loads
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    min-height: 0; /* Important for flex children */
+  }
+
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 5px;
+  }
+
+  .caption {
+    display: inline-block;
+  }
+  .caption-container {
+    width: 100%;
+    text-align: center;
+    margin: 5px 0 5px 0;
+  }
+</style>

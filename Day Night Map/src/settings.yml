@@ -1,0 +1,60 @@
+---
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+id: 127208
+custom_fields:
+- keyname: doesnt_matter
+  name: Day Night Map
+  field_type: author_bio
+  description: A real-time visualization of day and night regions across the world using accurate solar and lunar positioning calculations.
+  github_url: https://github.com/lanrat/day-night-map
+  learn_more_url: https://lanrat.github.io/day-night-map/
+- keyname: latitude
+  field_type: string
+  placeholder: '37.7618'
+  name: latitude
+  description: latitude for sunrise/sunset calculations
+  help_text: Find it <a href="https://www.latlong.net/">here</a>.
+- keyname: longitude
+  field_type: string
+  placeholder: "-122.4802"
+  name: longitude
+  description: longitude for sunrise/sunset calculations
+  help_text: Find it <a href="https://www.latlong.net/">here</a>.
+- keyname: showloc
+  field_type: select
+  options:
+  - true: showloc
+  - false: hideloc
+  default: showloc
+  name: Show Location Dot
+  description: show point on map at latitude/longitude
+- keyname: nosun
+  field_type: select
+  options:
+  - true: nosun
+  - false: moon
+  default: moon
+  name: Hide Sun on map
+- keyname: nomoon
+  field_type: select
+  options:
+  - true: nomoon
+  - false: moon
+  default: moon
+  name: Hide Moon on map
+- keyname: hour24
+  field_type: select
+  options:
+  - true: hour24
+  - false: hour12
+  default: hour12
+  name: 24 Hour Mode
+name: Day Night Map
+refresh_interval: 15

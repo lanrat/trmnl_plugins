@@ -1,0 +1,39 @@
+---
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+id: 162049
+custom_fields:
+- keyname: doesnt_matter
+  name: GitHub Workflow Actions
+  field_type: author_bio
+  description: A TRMNL plugin that displays the status of GitHub Actions workflows on your e-ink display.
+  github_url: https://github.com/lanrat
+  learn_more_url: https://lanrat.com/
+- keyname: github_usernames
+  field_type: multi_string
+  name: GitHub Usernames
+  description: Comma-separated list of GitHub usernames to monitor
+  default: ''
+- keyname: github_repos
+  field_type: multi_string
+  name: GitHub Repositories
+  description: Comma-separated list of repositories in owner/repo format
+  default: ''
+- keyname: github_pat
+  field_type: text
+  name: GitHub Personal Access Token
+  description: Optional PAT for higher API rate limits
+  default: ''
+- keyname: max_age_days
+  field_type: number
+  name: Maximum Age (days)
+  description: Only show workflows from the last N days
+  default: 7
+name: GitHub Workflow Actions
+refresh_interval: 15

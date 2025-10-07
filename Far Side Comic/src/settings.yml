@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://dyn.tedder.me/rss/farside/daily.json
+polling_headers: ''
+polling_body: ''
+id: 122324
+custom_fields:
+- keyname: doesnt_matter
+  name: The Far Side Comic
+  field_type: author_bio
+  description: Displays the daily Far Side comic
+  github_url: https://github.com/lanrat
+  learn_more_url: https://lanrat.com/
+name: Far Side Comic
+refresh_interval: 360

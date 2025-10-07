@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://comiccaster.xyz/rss/foxtrotclassics
+polling_headers: ''
+polling_body: ''
+id: 122369
+custom_fields:
+- keyname: doesnt_matter
+  name: FoxTrot Comic
+  field_type: author_bio
+  description: Displays the daily FoxTrot comic
+  github_url: https://github.com/lanrat
+  learn_more_url: https://lanrat.com/
+name: FoxTrot Classics Comic
+refresh_interval: 360

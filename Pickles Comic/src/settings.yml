@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://comiccaster.xyz/rss/pickles
+polling_headers: ''
+polling_body: ''
+id: 122316
+custom_fields:
+- keyname: doesnt_matter
+  name: Pickles Comic
+  field_type: author_bio
+  description: Displays the daily Pickles comic
+  github_url: https://github.com/lanrat
+  learn_more_url: https://lanrat.com/
+name: Pickles Comic
+refresh_interval: 360

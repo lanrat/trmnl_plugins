@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "sissel.shopify-liquid",
+        "redhat.vscode-yaml",
+        "davidanson.vscode-markdownlint"
+    ]
+}

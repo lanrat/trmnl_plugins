@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://www.litterboxcomics.com/feed/
+polling_headers: ''
+polling_body: ''
+id: 148700
+custom_fields:
+- keyname: doesnt_matter
+  name: Litterbox Comics
+  field_type: author_bio
+  description: Displays the daily Litterbox Comic
+  github_url: https://github.com/lanrat
+  learn_more_url: https://www.litterboxcomics.com/
+name: Litterbox Comics
+refresh_interval: 720
