@@ -13,7 +13,7 @@ custom_fields:
   name: FoxTrot Comic
   field_type: author_bio
   description: Displays the daily FoxTrot comic
-  github_url: https://github.com/lanrat
-  learn_more_url: https://lanrat.com/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/FoxTrot%20Classics%20Comic
 name: FoxTrot Classics Comic
 refresh_interval: 360

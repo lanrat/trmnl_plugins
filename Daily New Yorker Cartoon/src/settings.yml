@@ -13,7 +13,7 @@ custom_fields:
   name: Daily New Yorker Cartoon
   field_type: author_bio
   description: Displays the Daily New Yorker Cartoon
-  github_url: https://github.com/lanrat
-  learn_more_url: https://lanrat.com/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Daily%20New%20Yorker%20Cartoon
 name: Daily New Yorker Cartoon
 refresh_interval: 120

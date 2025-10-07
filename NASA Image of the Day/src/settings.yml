@@ -13,7 +13,7 @@ custom_fields:
   name: NASA Image of the Day
   field_type: author_bio
   description: Displays NASA's image of the day
-  github_url: https://github.com/lanrat
-  learn_more_url: https://lanrat.com/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/NASA%20Image%20of%20the%20Day
 name: NASA Image of the Day
 refresh_interval: 120

@@ -13,7 +13,7 @@ custom_fields:
   name: Litterbox Comics
   field_type: author_bio
   description: Displays the daily Litterbox Comic
-  github_url: https://github.com/lanrat
-  learn_more_url: https://www.litterboxcomics.com/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Litterbox%20Comics
 name: Litterbox Comics
 refresh_interval: 720

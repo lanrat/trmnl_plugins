@@ -13,8 +13,8 @@ custom_fields:
   name: Day Night Map
   field_type: author_bio
   description: A real-time visualization of day and night regions across the world using accurate solar and lunar positioning calculations.
-  github_url: https://github.com/lanrat/day-night-map
-  learn_more_url: https://lanrat.github.io/day-night-map/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Day%20Night%20Map
 - keyname: latitude
   field_type: string
   placeholder: '37.7618'

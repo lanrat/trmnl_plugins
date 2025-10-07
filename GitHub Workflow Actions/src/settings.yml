@@ -13,8 +13,8 @@ custom_fields:
   name: GitHub Workflow Actions
   field_type: author_bio
   description: A TRMNL plugin that displays the status of GitHub Actions workflows on your e-ink display.
-  github_url: https://github.com/lanrat
-  learn_more_url: https://lanrat.com/
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/GitHub%20Workflow%20Actions
 - keyname: github_usernames
   field_type: multi_string
   name: GitHub Usernames
