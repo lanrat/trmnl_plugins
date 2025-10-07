@@ -16,8 +16,14 @@ fi
 # set TRMNL_API_KEY in trmnl.env
 # https://usetrmnl.com/account
 if [[ ! -f "$SCRIPT_DIR/trmnl.env" ]]; then
-    echo "Error: trmnl.env not found in $SCRIPT_DIR" >&2
-    exit 1
+    echo "trmnl.env not found. Please visit https://usetrmnl.com/account to get your API key."
+    read -r -p "Enter your TRMNL API key: " api_key
+    if [[ -z "$api_key" ]]; then
+        echo "Error: API key cannot be empty" >&2
+        exit 1
+    fi
+    echo "TRMNL_API_KEY=$api_key" > "$SCRIPT_DIR/trmnl.env"
+    echo "Created trmnl.env with your API key"
 fi
 
 # Function to run docker command on a single plugin
