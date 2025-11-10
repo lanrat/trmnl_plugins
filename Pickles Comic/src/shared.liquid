@@ -72,7 +72,6 @@
     const newUrl = getImageUrlFromString(htmlString);
     if (newUrl) {
       imgElement.src = newUrl;
-      imgElement.alt = "Pickles comic strip"; // Also update alt text
     } else {
       imgElement.alt = "Could not load comic.";
       console.error("Could not extract image URL.");
