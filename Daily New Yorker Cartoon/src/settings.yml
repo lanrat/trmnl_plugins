@@ -2,9 +2,9 @@
 strategy: static
 no_screen_padding: 'yes'
 dark_mode: 'no'
-static_data: ''
+static_data: '{}'
 polling_verb: get
-polling_url: https://www.comicsrss.com/rss/beware-of-toddler.rss
+polling_url: ''
 polling_headers: ''
 polling_body: ''
 id: 131760
