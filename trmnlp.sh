@@ -4,14 +4,14 @@ set -o pipefail
 if [[ "${TRACE-0}" == "1" ]]; then set -o xtrace; fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+if [[ $# -lt 2 ]]; then
+    echo "Error: plugin dir and action are required args" >&2
+    exit 1
+fi
+
 # args
 PLUGIN_PATH_INPUT="$1"
 shift
-
-if [[ $# -lt 1 ]]; then
-    echo "Error: action argument required" >&2
-    exit 1
-fi
 
 # set TRMNL_API_KEY in trmnl.env
 # https://usetrmnl.com/account

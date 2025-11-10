@@ -24,3 +24,30 @@ This repository contains various TRMNL plugins, each in its own directory. Each 
    On first run, the script will prompt you to enter your TRMNL API key and automatically create the `trmnl.env` file.
 
 The script runs the TRMNL plugin development environment in Docker, mounting the specified plugin directory and making it available at <http://localhost:4567>.
+
+
+### Usage
+
+Create a new plugin with:
+
+```bash
+ ./trmnlp.sh <new-plugin-dir-name> init
+ ```
+
+Run the development server:
+
+```bash
+ ./trmnlp.sh <plugin-directory> serve
+ ```
+
+Pull changes from TRMNL server:
+
+```bash
+ ./trmnlp.sh <plugin-directory> pull
+ ```
+
+Push changes to TRMNL server:
+
+```bash
+ ./trmnlp.sh <plugin-directory> push
+ ```

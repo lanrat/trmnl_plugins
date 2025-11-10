@@ -2,7 +2,7 @@
 strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'
-static_data: ''
+static_data: "{}"
 polling_verb: get
 polling_url: https://dyn.tedder.me/rss/farside/daily.json
 polling_headers: ''
