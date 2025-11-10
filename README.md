@@ -25,7 +25,6 @@ This repository contains various TRMNL plugins, each in its own directory. Each 
 
 The script runs the TRMNL plugin development environment in Docker, mounting the specified plugin directory and making it available at <http://localhost:4567>.
 
-
 ### Usage
 
 Create a new plugin with:
@@ -51,3 +50,11 @@ Push changes to TRMNL server:
 ```bash
  ./trmnlp.sh <plugin-directory> push
  ```
+
+## Debugging
+
+[Plugin in a Degraded State (Reset)](https://help.usetrmnl.com/en/articles/12384091-plugin-in-a-degraded-state-reset)
+
+## Misc
+
+[Dynamic Polling URLs](https://help.usetrmnl.com/en/articles/12689499-dynamic-polling-urls)
