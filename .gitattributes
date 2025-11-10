@@ -1,1 +1,4 @@
-* text=auto eol=crlf
+# windows
+#* text=auto eol=crlf
+# Linux
+* text=auto eol=lf
