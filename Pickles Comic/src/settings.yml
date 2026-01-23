@@ -12,7 +12,7 @@ custom_fields:
 - keyname: doesnt_matter
   name: Pickles Comic
   field_type: author_bio
-  description: Displays the daily Pickles comic
+  description: Displays the daily Pickles comic by Brian Crane
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Pickles%20Comic
 name: Pickles Comic

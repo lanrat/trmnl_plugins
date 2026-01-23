@@ -10,9 +10,9 @@ polling_body: ''
 id: 131756
 custom_fields:
 - keyname: doesnt_matter
-  name: Beware of Toddler
+  name: Beware of Toddler Comic
   field_type: author_bio
-  description: Displays the daily Beware of Toddler Comic
+  description: Displays the daily Beware of Toddler Comic by George Gant
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Beware%20of%20Toddler%20Comic
 name: Beware of Toddler Comic

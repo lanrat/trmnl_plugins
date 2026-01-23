@@ -12,7 +12,7 @@ custom_fields:
 - keyname: doesnt_matter
   name: The Far Side Comic
   field_type: author_bio
-  description: Displays the daily Far Side comic
+  description: Displays the daily Far Side comic by Gary Larson
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Far%20Side%20Comic
 name: Far Side Comic
