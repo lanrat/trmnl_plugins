@@ -11,9 +11,10 @@
 {% endtemplate %}
 
 <script>
+  const corsProxy = 'https://cors-anywhere.com/';
   function getLatestComic() {
     // The URL is now prefixed with the CORS proxy to avoid cross-origin issues
-    const cartoonsURL = 'https://corsproxy.io/?https://www.newyorker.com/latest/cartoons';
+    const cartoonsURL = `${corsProxy}https://www.newyorker.com/latest/cartoons`;
     // Fetch the HTML content of the page via the proxy
     return fetch(cartoonsURL)
       .then(cartoonsResponse => cartoonsResponse.text())
@@ -33,7 +34,7 @@
        if (!firstCartoon) {
           return null;
         }
-        const comicURL = `https://corsproxy.io/?https://www.newyorker.com${firstCartoon.getAttribute('href')}`;
+        const comicURL = `${corsProxy}https://www.newyorker.com${firstCartoon.getAttribute('href')}`;
         // Fetch the HTML content of the page via the proxy
         return fetch(comicURL)
           .then(dailyResponse => dailyResponse.text())
@@ -159,7 +160,7 @@
             comicElement.src = img_data;
           }
           // request the comic image
-          comicElement.src = `https://corsproxy.io/?${nycomic.url}`;
+          comicElement.src = `${corsProxy}${nycomic.url}`;
           // set the caption if there is one
           if (nycomic.caption) {
             captionElement.textContent = nycomic.caption;
