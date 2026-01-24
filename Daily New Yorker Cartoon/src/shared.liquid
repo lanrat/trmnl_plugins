@@ -1,74 +1,109 @@
-{% template comic %}
-<div class="view bg-white">
-  <div class="image-container">
-    <img id="comic" class="image image-dither image--dither" crossorigin="anonymous"/>
-    <p class="text--black;" style="display: none;" id="error">Error Loading Image</p>
-  </div>
-  <div class="caption-container">
-    <p id="caption" class="value value--xsmall caption text--center" data-pixel-perfect="true" data-content-limiter="true"></p>
-  </div>
-</div>
-{% endtemplate %}
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    min-height: 0; /* Important for flex children */
+  }
+
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 5px;
+  }
+
+  .title_bar {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+</style>
 
 <script>
-  const corsProxy = 'https://cors-anywhere.com/';
-  function getLatestComic() {
-    // The URL is now prefixed with the CORS proxy to avoid cross-origin issues
-    const cartoonsURL = `${corsProxy}https://www.newyorker.com/latest/cartoons`;
-    // Fetch the HTML content of the page via the proxy
-    return fetch(cartoonsURL)
-      .then(cartoonsResponse => cartoonsResponse.text())
-      .then(cartoonsHTML => {
-        // Parse the HTML string into a DOM document
-        const parser = new DOMParser();
-        const cartoonsDoc = parser.parseFromString(cartoonsHTML, 'text/html');
-        // Use document.evaluate with an XPath expression
-        const firstCartoon = cartoonsDoc.evaluate(
-          "//a[starts-with(., 'Daily Cartoon')]", 
-          cartoonsDoc, 
-          null, 
-          XPathResult.FIRST_ORDERED_NODE_TYPE, 
-          null
-        ).singleNodeValue;
-        // The 'comicLink' variable now holds the element, or 'null' if not found
-       if (!firstCartoon) {
-          return null;
-        }
-        const comicURL = `${corsProxy}https://www.newyorker.com${firstCartoon.getAttribute('href')}`;
-        // Fetch the HTML content of the page via the proxy
-        return fetch(comicURL)
-          .then(dailyResponse => dailyResponse.text())
-          .then(dailyHTML => {
-            // Parse the HTML string into a DOM document
-            const dailyDoc = parser.parseFromString(dailyHTML, 'text/html');
-            const pictureElement = dailyDoc.evaluate(
-              "//picture[contains(@class, 'responsive-cartoon__image')]", 
-              dailyDoc, 
-              null, 
-              XPathResult.FIRST_ORDERED_NODE_TYPE, 
-              null
-            ).singleNodeValue;
-            const imgElement = pictureElement.querySelector('img');
-            if (!imgElement) {
-              return null;
-            }
-            var comic = {
-              url: imgElement.src
-            };
-            // find the caption, if set
-            const captionElement = dailyDoc.evaluate(
-              "//span[contains(@class, 'caption__text')]", 
-              dailyDoc, 
-              null, 
-              XPathResult.FIRST_ORDERED_NODE_TYPE, 
-              null
-            ).singleNodeValue;
-            if (captionElement) {
-              comic.caption = captionElement.textContent;
-            }
-            return comic;
-          });
-      });
+  /**
+ * Parses an HTML string and returns the 'src' attribute of the first <img> tag found.
+ *
+ * @param {string} htmlString The HTML string to parse.
+ * @returns {string | null} The URL from the image's 'src' attribute, or null if no <img> tag is found.
+ */
+  function getImageUrlFromString(htmlString) {
+    try {
+      // 1. Create a new DOMParser
+      const parser = new DOMParser();
+
+      // 2. Parse the HTML string into a document
+      // 'text/html' tells the parser to treat it as HTML
+      const doc = parser.parseFromString(htmlString, 'text/html');
+
+      // 3. Find the first <img> element in the parsed document
+      const img = doc.querySelector('img');
+
+      // 4. If an <img> tag is found, return its 'src' attribute.
+      //    Otherwise, return null.
+      if (img) {
+        return img.getAttribute('src');
+      } else {
+        console.warn("No <img> tag found in the provided string.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error parsing HTML string:", error);
+      return null;
+    }
+  }
+
+  function getEmTextFromString(htmlString) {
+    try {
+      // 1. Create a new DOMParser
+      const parser = new DOMParser();
+
+      // 2. Parse the HTML string into a document
+      // 'text/html' tells the parser to treat it as HTML
+      const doc = parser.parseFromString(htmlString, 'text/html');
+
+      // 3. Find the first <em> element in the parsed document
+      const em = doc.querySelector('em');
+
+      // 4. If an <em> tag is found, return its 'innerText' attribute.
+      //    Otherwise, return null.
+      if (em) {
+        return em.textContent;
+      } else {
+        console.warn("No <em> tag found in the provided string.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error parsing HTML string:", error);
+      return null;
+    }
+  }
+
+  function displayImg(htmlString) {
+    const imgElement = document.getElementById('comic');
+    const txtElement = document.getElementById('caption');
+    const newUrl = getImageUrlFromString(htmlString);
+    if (newUrl) {
+      imgElement.src = newUrl;
+      txtElement.innerText =  getEmTextFromString(htmlString); 
+    } else {
+      imgElement.alt = "Could not load comic.";
+      console.error("Could not extract image URL.");
+    }
   }
 
   /**
@@ -144,85 +179,22 @@
     return cropCanvas.toDataURL();
   }
 
-  function init() {
-    getLatestComic()
-      .then(nycomic => {
-        const comicElement = document.getElementById('comic');
-        const errElement = document.getElementById('error');
-        const captionElement = document.getElementById('caption');
-        if (nycomic) {
-          // set onload to crop the image once its retrieved
-          comicElement.onload = function() {
-            // prevent infinite recursion
-            comicElement.onload = null;
-            // update the image to the cropped version
-            const img_data = removeImageBlanks(comicElement);
-            comicElement.src = img_data;
-          }
-          // request the comic image
-          comicElement.src = `${corsProxy}${nycomic.url}`;
-          // set the caption if there is one
-          if (nycomic.caption) {
-            captionElement.textContent = nycomic.caption;
-          }
-        } else {
-          // show error
-          errElement.style.display = '';
-          comicElement.style.display = 'none';
-        }
-      })
-      .catch(error => {
-        // show error
-        const comicElement = document.getElementById('comic');
-        const errElement = document.getElementById('error');
-        errElement.style.display = '';
-        comicElement.style.display = 'none';
-      });
-  }
-
-  // Call the function when page loads
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
 </script>
-<style>
-  .view {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
 
-  .image-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    overflow: hidden;
-    min-height: 0; /* Important for flex children */
-  }
-
-  .image-container img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    border-radius: 5px;
-  }
-
-  .caption {
-    display: inline-block;
-  }
-  .caption-container {
-    width: 100%;
-    text-align: center;
-    margin: 5px 0 5px 0;
-  }
-</style>
+{% template comic %}
+<div class="view bg-white">
+  <div class="image-container">
+    {% if rss.channel.item %}
+    <img id="comic" class="image image-dither image--dither"/>
+    {% else %}
+    <p class="text--black">Error Loading Image</p>
+    {% endif %}
+  </div>
+  <div class="caption-container">
+    <p id="caption" class="value value--xsmall caption text--center" data-pixel-perfect="true" data-content-limiter="true"></p>
+  </div>
+  {% if rss.channel.item %}
+  <script>displayImg({{ rss.channel.item[0]description | json }});</script>
+  {% endif %}
+</div>
+{% endtemplate %}

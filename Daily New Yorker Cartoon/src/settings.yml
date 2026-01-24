@@ -1,10 +1,10 @@
 ---
-strategy: static
+strategy: polling
 no_screen_padding: 'yes'
 dark_mode: 'no'
 static_data: "{}"
 polling_verb: get
-polling_url: ''
+polling_url: https://comiccaster.xyz/feeds/newyorker-daily-cartoon.xml
 polling_headers: ''
 polling_body: ''
 id: 131760
@@ -16,4 +16,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Daily%20New%20Yorker%20Cartoon
 name: Daily New Yorker Cartoon
-refresh_interval: 120
+refresh_interval: 360
