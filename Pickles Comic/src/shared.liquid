@@ -83,7 +83,7 @@
   <div class="image-container">
     {% if rss.channel.item %}
     <img id="comic-image" class="image image-dither" />
-    <script>displayImg('{{ rss.channel.item[0]description }}');</script>
+    <script>displayImg({{ rss.channel.item[0]description | json }});</script>
     {% else %}
     <p class="text--black">Error Loading Image</p>
     {% endif %}
