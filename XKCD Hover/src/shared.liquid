@@ -1,0 +1,58 @@
+{% template comic %}
+<div class="view bg-white">
+  {% if title %}
+  <div class="w--full text-stroke text--center p--1 value value--xsmall clamp--none">
+    {{ title }}
+  </div>
+  {% endif %}
+  <div class="image-container">
+    {% if img %}
+    <img src="{{ img }}" class="image image-dither" />
+    {% else %}
+    <p class="text--black">Error Loading Image</p>
+    {% endif %}
+  </div>
+  {% if alt %}
+  <div class="description w--full text-stroke text--center p--1 value value--xsmall clamp--none">
+    {{alt}}
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    min-height: 0; /* Important for flex children */
+  }
+
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 5px;
+  }
+
+  .title_bar {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+</style>
+
+{% endtemplate %}

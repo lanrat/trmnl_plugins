@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://xkcd.com/info.0.json
+polling_headers: ''
+polling_body: ''
+id: 230347
+custom_fields:
+- keyname: doesnt_matter
+  name: XKCD Hover
+  field_type: author_bio
+  description: XKCD Comic by Randall Munroe with hover alt text
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/XKCD%20Hover
+name: XKCD Hover
+refresh_interval: 720
