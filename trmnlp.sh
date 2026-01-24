@@ -4,6 +4,13 @@ set -o pipefail
 if [[ "${TRACE-0}" == "1" ]]; then set -o xtrace; fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+# Handle pull command
+if [[ $# -ge 1 && "$1" == "pull" ]]; then
+    echo "Pulling latest trmnl/trmnlp:latest Docker image..."
+    docker pull trmnl/trmnlp:latest
+    exit 0
+fi
+
 if [[ $# -lt 2 ]]; then
     echo "Error: plugin dir and action are required args" >&2
     exit 1
