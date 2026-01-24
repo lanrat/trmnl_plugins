@@ -93,19 +93,6 @@
     }
   }
 
-  function displayImg(htmlString) {
-    const imgElement = document.getElementById('comic');
-    const txtElement = document.getElementById('caption');
-    const newUrl = getImageUrlFromString(htmlString);
-    if (newUrl) {
-      imgElement.src = newUrl;
-      txtElement.innerText =  getEmTextFromString(htmlString); 
-    } else {
-      imgElement.alt = "Could not load comic.";
-      console.error("Could not extract image URL.");
-    }
-  }
-
   /**
    * The core function to remove blank space from an image.
    * @param {HTMLImageElement} imageObject The image element to process.
@@ -178,6 +165,33 @@
                           0, 0, cropWidth, cropHeight);
     return cropCanvas.toDataURL();
   }
+
+  function displayImg(htmlString) {
+    const corsProxy = 'https://cors-anywhere.com/';
+    const imgElement = document.getElementById('comic');
+    const txtElement = document.getElementById('caption');
+    const newUrl = getImageUrlFromString(htmlString);
+    if (newUrl) {
+      // // set onload to crop the image once its retrieved
+      // imgElement.onload = function() {
+      //   // prevent infinite recursion
+      //   imgElement.onload = null;
+      //   // update the image to the cropped version
+      //   const img_data = removeImageBlanks(imgElement);
+      //   imgElement.src = img_data;
+      // }
+      
+      // imgElement.crossOrigon = "anonymous";
+      // imgElement.src = `${corsProxy}${newUrl}`;
+
+      imgElement.src = newUrl;
+      txtElement.innerText =  getEmTextFromString(htmlString); 
+    } else {
+      imgElement.alt = "Could not load comic.";
+      console.error("Could not extract image URL.");
+    }
+  }
+
 
 </script>
 
