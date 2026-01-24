@@ -1,4 +1,4 @@
-# [XKCD with Hover](https://usetrmnl.com/recipes/131760)
+# [XKCD with Hover](https://usetrmnl.com/recipes/230347)
 
 Displays the latest [XKCD](https://xkcd.com/) with hover/alt text on your Trmnl.
 
