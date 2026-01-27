@@ -16,4 +16,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/NASA%20Image%20of%20the%20Day
 name: NASA Image of the Day
-refresh_interval: 360
+refresh_interval: 720

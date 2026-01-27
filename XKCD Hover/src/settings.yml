@@ -10,10 +10,10 @@ polling_body: ''
 id: 230540
 custom_fields:
 - keyname: doesnt_matter
-  name: XKCD Hover
+  name: XKCD Comic (With Hover text)
   field_type: author_bio
-  description: XKCD Comic by Randall Munroe with hover/alt text
+  description: XKCD Comic by Randall Munroe with hover text
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/XKCD%20Hover
-name: XKCD (Hover)
+name: XKCD Comic (with Hover text)
 refresh_interval: 720

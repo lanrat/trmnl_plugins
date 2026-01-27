@@ -32,6 +32,16 @@
     flex-shrink: 0;
     z-index: 1;
   }
+
+  .text--center {
+        text-align: center;
+  }
+
+  .caption-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+  }
 </style>
 
 <script>
@@ -205,7 +215,7 @@
     {% endif %}
   </div>
   <div class="caption-container">
-    <p id="caption" class="value value--xsmall caption text--center" data-pixel-perfect="true" data-content-limiter="true"></p>
+    <p id="caption" class="value value--xsmall caption text--center" data-pixel-perfect="true">
   </div>
   {% if rss.channel.item %}
   <script>displayImg({{ rss.channel.item[0]description | json }});</script>
