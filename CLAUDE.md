@@ -63,6 +63,21 @@ All image/content plugins should use this pattern (works across all device sizes
 Size-based (mobile-first): `sm:` (600px+), `md:` (800px+), `lg:` (1024px+)
 Bit-depth (non-progressive): `1bit:`, `2bit:`, `4bit:`
 
+### Typography Components
+
+Use the right component for the content type — don't mix classes from different components:
+
+- **`title` / `title--small`** — Headings. Sizes: `small`, base, `large`, `xlarge`, `xxlarge`
+- **`description` / `description--large`** — Paragraph/body text. Sizes: base, `large`, `xlarge`, `xxlarge`
+- **`value` / `value--xsmall`** — Numerical data display only. Not for readable prose
+- **`label`** — Short labels/tags with style variants (`outline`, `underline`, `inverted`)
+
+Notes:
+
+- **`text-stroke`** — Only needed when text overlays non-white/image backgrounds. Unnecessary on `bg-white`
+- **`data-pixel-perfect="true"`** — Uses JS to wrap each text line in width-adjusted spans. Can break `text-align: center` in PNG renders. Best for short, left-aligned titles — avoid on centered paragraph text
+- **`clamp--none`** — Disables text truncation. Use on content that should always show in full
+
 ### Settings Notes
 
 - `no_screen_padding: 'yes'` — Removes framework padding for full-bleed content (adds `screen--no-bleed`)

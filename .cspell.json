@@ -12,7 +12,10 @@
         "Litterbox",
         "trmnl",
         "trmnlp",
-        "TRMNLP"
+        "TRMNLP",
+        "xlarge",
+        "xsmall",
+        "xxlarge"
     ],
     "ignoreWords": [],
     "import": []
