@@ -11,6 +11,7 @@ id: 127208
 custom_fields:
 - keyname: doesnt_matter
   name: Day Night Map
+  category: environment
   field_type: author_bio
   description: A real-time visualization of day and night regions across the world using accurate solar and lunar positioning calculations.
   github_url: https://github.com/lanrat/trmnl_plugins

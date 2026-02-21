@@ -12,6 +12,7 @@ id: 248038
 custom_fields:
 - keyname: doesnt_matter
   name: Daily For Better or For Worse Comic
+  category: comics
   field_type: author_bio
   description: Displays the daily For Better or For Worse comic by Lynn Johnston
   github_url: https://github.com/lanrat/trmnl_plugins

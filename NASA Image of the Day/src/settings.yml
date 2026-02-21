@@ -11,6 +11,7 @@ id: 76645
 custom_fields:
 - keyname: doesnt_matter
   name: NASA Image of the Day
+  category: images
   field_type: author_bio
   description: Displays NASA's image of the day
   github_url: https://github.com/lanrat/trmnl_plugins

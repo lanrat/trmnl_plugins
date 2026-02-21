@@ -12,6 +12,7 @@ custom_fields:
 - keyname: doesnt_matter
   name: XKCD Comic (With Hover text)
   field_type: author_bio
+  category: comics
   description: XKCD Comic by Randall Munroe with hover text
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/XKCD%20Hover

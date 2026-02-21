@@ -12,6 +12,7 @@ custom_fields:
 - keyname: doesnt_matter
   name: Litterbox Comics
   field_type: author_bio
+  category: comics
   description: Displays the daily Litterbox comic by Chesca Hause
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Litterbox%20Comics

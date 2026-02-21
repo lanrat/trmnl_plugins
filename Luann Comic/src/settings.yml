@@ -12,6 +12,7 @@ id: 248034
 custom_fields:
 - keyname: doesnt_matter
   name: Daily Luann Comic
+  category: comics
   field_type: author_bio
   description: Displays the daily Luann comic by Greg Evans and Karen Evans
   github_url: https://github.com/lanrat/trmnl_plugins

@@ -11,6 +11,7 @@ id: 131756
 custom_fields:
 - keyname: doesnt_matter
   name: Beware of Toddler Comic
+  category: comics
   field_type: author_bio
   description: Displays the daily Beware of Toddler Comic by George Gant
   github_url: https://github.com/lanrat/trmnl_plugins
