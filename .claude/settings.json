@@ -9,7 +9,9 @@
       "Read(//home/lanrat/.config/trmnlp/**)",
       "Read(//home/lanrat/code/trmnl_plugins/**)",
       "Bash(/home/lanrat/code/trmnl_plugins/_generator/.venv/bin/python3:*)",
-      "WebFetch(domain:0.0.0.0)"
+      "WebFetch(domain:0.0.0.0)",
+      "WebFetch(domain:comiccaster.xyz)",
+      "WebFetch(domain:help.usetrmnl.com)"
     ]
   }
 }

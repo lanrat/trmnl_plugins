@@ -1,6 +1,6 @@
 # Claud
 
-This repository contains the source for all of my Trmnl Plugins.
+This repository contains the source for all of my Trmnl Plugins and recipes.
 TRMNL is an e-ink display device designed to help users stay focused and calm by showing glanceable, distraction-free information dashboards. It supports a plugin ecosystem that allows developers to build and share custom screen layouts delivering data from any source to the device.
 
 Each plugin is in its own folder, and is synced both to github and to the Trmnl API.
@@ -88,7 +88,7 @@ Notes:
 
 ## Comic Plugin Generator
 
-Some comic plugins (Pickles, FoxTrot, Daily New Yorker) are generated from shared templates via `_generator/generate.py`. Do not edit their plugin files directly — edit the templates or config in `_generator/` and re-run the generator. See [`_generator/GENERATOR.md`](_generator/GENERATOR.md) for full documentation.
+Some comic plugins (Pickles, FoxTrot, Daily New Yorker, Far Side) are generated from shared templates via `_generator/generate.py`. Do not edit their plugin files directly — edit the templates or config in `_generator/` and re-run the generator. See [`_generator/GENERATOR.md`](_generator/GENERATOR.md) for full documentation.
 
 ## Developer Docs
 
