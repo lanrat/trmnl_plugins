@@ -3,20 +3,35 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* Prevents scrollbars on the main page if iframe content is larger */
+    overflow: hidden;
   }
 
-  iframe {
-    position: fixed; /* Positions the iframe relative to the viewport */
-    top: 0;
-    left: 0;
-    width: 100vw; /* 100% of viewport width */
-    height: 100vh; /* 100% of viewport height */
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .iframe-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+    width: 100%;
+  }
+
+  .iframe-container iframe {
+    width: 100%;
+    height: 100%;
     border: none;
-    overflow: auto; /* Allows scrolling within the iframe if its content overflows */
   }
 </style>
 
-<div class="layout layout--col gap--space-between image-dither" data-pixel-perfect="true">
-  <iframe src="https://lanrat.github.io/day-night-map/?minimal&grayscale&timezone={{trmnl.user.time_zone_iana}}&lat={{trmnl.plugin_settings.custom_fields_values.latitude}}&lon={{trmnl.plugin_settings.custom_fields_values.longitude}}&{{trmnl.plugin_settings.custom_fields_values.showloc}}&{{trmnl.plugin_settings.custom_fields_values.nosun}}&{{trmnl.plugin_settings.custom_fields_values.nomoon}}&{{trmnl.plugin_settings.custom_fields_values.hour24}}"></iframe>
+<div class="view">
+  <div class="iframe-container image-dither" data-pixel-perfect="true">
+    <iframe scrolling="no" src="https://lanrat.github.io/day-night-map/?minimal&grayscale&timezone={{trmnl.user.time_zone_iana}}&lat={{trmnl.plugin_settings.custom_fields_values.latitude}}&lon={{trmnl.plugin_settings.custom_fields_values.longitude}}&{{trmnl.plugin_settings.custom_fields_values.showloc}}&{{trmnl.plugin_settings.custom_fields_values.nosun}}&{{trmnl.plugin_settings.custom_fields_values.nomoon}}&{{trmnl.plugin_settings.custom_fields_values.hour24}}"></iframe>
+  </div>
 </div>
