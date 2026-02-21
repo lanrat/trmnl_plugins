@@ -37,8 +37,11 @@ fi
 run_plugin() {
     local plugin_path="$1"
     shift
+    local plugin_name
+    plugin_name="$(basename "$plugin_path")"
+    plugin_name="${plugin_name// /_}"
     echo "Running on plugin: $plugin_path"
-    docker run -it  --rm --name "trmnlp" \
+    docker run -it --rm --name "trmnlp-${plugin_name}" \
         --publish 4567:4567 \
         --env-file "$SCRIPT_DIR/trmnl.env" \
         --user "$(id -u):$(id -g)" \
