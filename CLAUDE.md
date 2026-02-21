@@ -14,8 +14,9 @@ Each plugin is in its own folder, and is synced both to github and to the Trmnl 
 ```
 
 Commands:
+
 - `init` — Scaffold a new plugin
-- `serve` — Local dev server at http://localhost:4567
+- `serve` — Local dev server at <http://localhost:4567>
 - `pull` — Download plugin from TRMNL server
 - `push` — Upload plugin to TRMNL server
 
@@ -27,6 +28,7 @@ Use `.` as plugin-dir to run on all plugins (any dir containing `src/settings.ym
 ### Template Structure
 
 Each plugin has `src/` with these files:
+
 - `shared.liquid` — Main template (shared markup and styles)
 - `full.liquid`, `half_horizontal.liquid`, `half_vertical.liquid`, `quadrant.liquid` — Layout-specific entry points that typically render the shared template
 - `settings.yml` — Plugin config (strategy, polling, custom fields, `no_screen_padding`, `dark_mode`, etc.)

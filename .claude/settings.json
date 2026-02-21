@@ -6,7 +6,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:docs.usetrmnl.com)",
       "Bash(trmnlp --help:*)",
-      "Read(//home/lanrat/.config/trmnlp/**)"
+      "Read(//home/lanrat/.config/trmnlp/**)",
+      "Read(//home/lanrat/code/trmnl_plugins/**)"
     ]
   }
 }
