@@ -81,6 +81,16 @@ comics:
     description: "Displays the daily B.C. comic by Johnny Hart"
     pattern: title
 
+  - name: "Far Side Comic"
+    dir: "Far Side Comic"
+    id: 122324
+    polling_url: "https://comiccaster.xyz/feeds/farside-daily.xml"
+    refresh_interval: 1440
+    no_screen_padding: false
+    description: "Displays the daily Far Side comic by Gary Larson"
+    pattern: caption
+    caption_selector: "p[style*='italic']"
+
   - name: "ADHDinos"
     dir: "ADHDinos Comic"
     id: 248040

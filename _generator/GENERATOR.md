@@ -7,6 +7,7 @@ The `_generator/` directory contains a Python-based code generator for comiccast
 - **Pickles Comic** (`pattern: title`)
 - **FoxTrot Classics Comic** (`pattern: title`)
 - **Daily New Yorker Cartoon** (`pattern: caption`)
+- **Far Side Comic** (`pattern: caption`)
 
 ## Setup
 
@@ -54,7 +55,7 @@ _generator/.venv/bin/python3 _generator/generate.py --check
 The `pattern` field in `comics.yml` selects which `shared.liquid` template is used:
 
 - **`title`** — Displays the comic image with a title bar at the bottom showing `rss.channel.item[0].title`. Used by Pickles and FoxTrot.
-- **`caption`** — Displays the comic image with a caption extracted from the `<em>` tag in the RSS description. Used by Daily New Yorker Cartoon.
+- **`caption`** — Displays the comic image with a caption extracted from the RSS description HTML. The caption element is found using a configurable CSS selector (`caption_selector`, defaults to `"em"`). Used by Daily New Yorker Cartoon and Far Side Comic.
 - **`panels`** — For multi-panel comics where the RSS description contains multiple `<img>` tags. Displays a single panel selected by `panel_index`. Supports negative indices (`-1` = last panel, `-2` = second to last, etc). Used by ADHDinos.
 
 ## Config Reference (`comics.yml`)
@@ -72,6 +73,7 @@ Each comic entry supports the following fields:
 | `description` | Yes | Short description shown in plugin metadata |
 | `pattern` | Yes | Template pattern: `title`, `caption`, or `panels` |
 | `panel_index` | No | For `panels` pattern: which panel to display (supports negative indices, e.g. `-1` for last) |
+| `caption_selector` | No | For `caption` pattern: CSS selector for the caption element (defaults to `"em"`) |
 | `custom_fields_name` | No | Override the name shown in `custom_fields` (defaults to `name`) |
 
 ## Generated Files

@@ -2,15 +2,15 @@
 strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'
-static_data: "{}"
+static_data: ''
 polling_verb: get
-polling_url: https://dyn.tedder.me/rss/farside/daily.json
+polling_url: https://comiccaster.xyz/feeds/farside-daily.xml
 polling_headers: ''
 polling_body: ''
 id: 122324
 custom_fields:
 - keyname: doesnt_matter
-  name: The Far Side Comic
+  name: Far Side Comic
   category: comics
   field_type: author_bio
   description: Displays the daily Far Side comic by Gary Larson

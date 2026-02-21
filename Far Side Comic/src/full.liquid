@@ -1,1 +1,2 @@
-{% render "comic" items: items %}
+{% assign first_item = rss.channel.item[0] | default: rss.channel.item %}
+{% render "comic" item: first_item %}
