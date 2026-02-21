@@ -29,39 +29,32 @@
     border-radius: 5px;
   }
 
-  .title_bar {
-    flex-shrink: 0;
-    z-index: 1;
-  }
 </style>
 
 <script>
   /**
- * Parses an HTML string and returns the 'src' attribute of the first <img> tag found.
+ * Parses an HTML string and returns the 'src' attribute of an <img> tag at the given index.
+ * Supports negative indices (-1 = last image, -2 = second to last, etc).
  *
  * @param {string} htmlString The HTML string to parse.
- * @returns {string | null} The URL from the image's 'src' attribute, or null if no <img> tag is found.
+ * @param {number} index The index of the image to extract (supports negative).
+ * @returns {string | null} The URL from the image's 'src' attribute, or null if not found.
  */
-  function getImageUrlFromString(htmlString) {
+  function getImageUrlFromString(htmlString, index) {
     try {
-      // 1. Create a new DOMParser
       const parser = new DOMParser();
-
-      // 2. Parse the HTML string into a document
-      // 'text/html' tells the parser to treat it as HTML
       const doc = parser.parseFromString(htmlString, 'text/html');
-
-      // 3. Find the first <img> element in the parsed document
-      const img = doc.querySelector('img');
-
-      // 4. If an <img> tag is found, return its 'src' attribute.
-      //    Otherwise, return null.
-      if (img) {
-        return img.getAttribute('src');
-      } else {
-        console.warn("No <img> tag found in the provided string.");
+      const imgs = doc.querySelectorAll('img');
+      if (imgs.length === 0) {
+        console.warn("No <img> tags found in the provided string.");
         return null;
       }
+      const i = index < 0 ? imgs.length + index : index;
+      if (i < 0 || i >= imgs.length) {
+        console.warn("Image index " + index + " out of range (found " + imgs.length + " images).");
+        return null;
+      }
+      return imgs[i].getAttribute('src');
     } catch (error) {
       console.error("Error parsing HTML string:", error);
       return null;
@@ -70,7 +63,7 @@
 
   function displayImg(htmlString) {
     const imgElement = document.getElementById('comic-image');
-    const newUrl = getImageUrlFromString(htmlString);
+    const newUrl = getImageUrlFromString(htmlString, -1);
     if (newUrl) {
       imgElement.src = newUrl;
     } else {
@@ -87,11 +80,6 @@
     <script>displayImg({{ item.description | json }});</script>
     {% else %}
     <p class="text--black">Error Loading Image</p>
-    {% endif %}
-  </div>
-  <div class="title_bar">
-    {% if item %}
-    <span class="instance text-stroke">{{ item.title }}</span>
     {% endif %}
   </div>
 </div>

@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'yes'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://comiccaster.xyz/feeds/adhdinos.xml
+polling_headers: ''
+polling_body: ''
+id: 248040
+custom_fields:
+- keyname: doesnt_matter
+  name: ADHDinos
+  field_type: author_bio
+  description: Displays the ADHDinos comic by Ryan Keats
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/ADHDinos%20Comic
+name: ADHDinos
+refresh_interval: 360

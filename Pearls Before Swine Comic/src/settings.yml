@@ -1,0 +1,19 @@
+---
+strategy: polling
+no_screen_padding: 'yes'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://comiccaster.xyz/rss/pearlsbeforeswine
+polling_headers: ''
+polling_body: ''
+id: 248035
+custom_fields:
+- keyname: doesnt_matter
+  name: Daily Pearls Before Swine Comic
+  field_type: author_bio
+  description: Displays the daily Pearls Before Swine comic by Stephan Pastis
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Pearls%20Before%20Swine%20Comic
+name: Daily Pearls Before Swine Comic
+refresh_interval: 360

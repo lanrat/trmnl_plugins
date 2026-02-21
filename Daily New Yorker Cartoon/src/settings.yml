@@ -2,7 +2,7 @@
 strategy: polling
 no_screen_padding: 'yes'
 dark_mode: 'no'
-static_data: "{}"
+static_data: ''
 polling_verb: get
 polling_url: https://comiccaster.xyz/feeds/newyorker-daily-cartoon.xml
 polling_headers: ''
