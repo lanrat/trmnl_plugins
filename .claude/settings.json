@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:help.trmnl.com)",
+      "Bash(grep:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.usetrmnl.com)",
+      "Bash(trmnlp --help:*)",
+      "Read(//home/lanrat/.config/trmnlp/**)"
+    ]
+  }
+}

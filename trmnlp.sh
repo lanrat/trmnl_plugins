@@ -42,6 +42,7 @@ run_plugin() {
         --publish 4567:4567 \
         --env-file "$SCRIPT_DIR/trmnl.env" \
         --user "$(id -u):$(id -g)" \
+        --env HOME=/tmp \
         --volume "$plugin_path:/plugin" \
         trmnl/trmnlp:latest "$@"
 }
