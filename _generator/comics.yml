@@ -1,0 +1,93 @@
+comics:
+  - name: "Pickles Comic"
+    dir: "Pickles Comic"
+    id: 122316
+    polling_url: "https://comiccaster.xyz/rss/pickles"
+    refresh_interval: 360
+    no_screen_padding: false
+    description: "Displays the daily Pickles comic by Brian Crane"
+    pattern: title
+
+  - name: "FoxTrot Classics Comic"
+    dir: "FoxTrot Classics Comic"
+    id: 122369
+    polling_url: "https://comiccaster.xyz/rss/foxtrotclassics"
+    refresh_interval: 360
+    no_screen_padding: false
+    description: "Displays the daily FoxTrot comic by Bill Amend"
+    custom_fields_name: "FoxTrot Comic"
+    pattern: title
+
+  - name: "Daily New Yorker Cartoon"
+    dir: "Daily New Yorker Cartoon"
+    id: 131760
+    polling_url: "https://comiccaster.xyz/feeds/newyorker-daily-cartoon.xml"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the Daily New Yorker Cartoon"
+    pattern: caption
+
+  - name: "Daily Luann Comic"
+    dir: "Luann Comic"
+    id: 248034
+    polling_url: "https://comiccaster.xyz/rss/luann"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily Luann comic by Greg Evans and Karen Evans"
+    pattern: title
+
+  - name: "Daily Pearls Before Swine Comic"
+    dir: "Pearls Before Swine Comic"
+    id: 248035
+    polling_url: "https://comiccaster.xyz/rss/pearlsbeforeswine"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily Pearls Before Swine comic by Stephan Pastis"
+    pattern: title
+
+  - name: "Daily Non Sequitur Comic"
+    dir: "Non Sequitur Comic"
+    id: 248036
+    polling_url: "https://comiccaster.xyz/rss/nonsequitur"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily Non Sequitur comic by Wiley Miller"
+    pattern: title
+
+  - name: "Daily Doonesbury Comic"
+    dir: "Doonesbury Comic"
+    id: 248037
+    polling_url: "https://comiccaster.xyz/rss/doonesbury"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily Doonesbury comic by Garry Trudeau"
+    pattern: title
+
+  - name: "Daily For Better or For Worse Comic"
+    dir: "For Better or For Worse Comic"
+    id: 248038
+    polling_url: "https://comiccaster.xyz/rss/forbetterorforworse"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily For Better or For Worse comic by Lynn Johnston"
+    pattern: title
+
+  - name: "Daily B.C. Comic"
+    dir: "B.C. Comic"
+    id: 248039
+    polling_url: "https://comiccaster.xyz/rss/bc"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the daily B.C. comic by Johnny Hart"
+    pattern: title
+
+  - name: "ADHDinos"
+    dir: "ADHDinos Comic"
+    id: 248040
+    polling_url: "https://comiccaster.xyz/feeds/adhdinos.xml"
+    refresh_interval: 360
+    no_screen_padding: true
+    description: "Displays the ADHDinos comic by Ryan Keats"
+    pattern: panels
+    panel_index: -1
+

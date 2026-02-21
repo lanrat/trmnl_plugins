@@ -51,6 +51,10 @@ Push changes to TRMNL server:
  ./trmnlp.sh <plugin-directory> push
  ```
 
+## Comic Plugin Generator
+
+Some comic plugins are generated from shared templates using a Python-based code generator. See [`_generator/GENERATOR.md`](_generator/GENERATOR.md) for details.
+
 ## Debugging
 
 [Plugin in a Degraded State (Reset)](https://help.usetrmnl.com/en/articles/12384091-plugin-in-a-degraded-state-reset)

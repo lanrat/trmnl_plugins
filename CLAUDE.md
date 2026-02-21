@@ -86,6 +86,10 @@ Notes:
 - `no_screen_padding: 'no'` — Keeps default gap-based padding around content
 - The `trmnlp` sync tool writes files with CRLF line endings; the repo normalizes to LF via `.gitattributes`
 
+## Comic Plugin Generator
+
+Some comic plugins (Pickles, FoxTrot, Daily New Yorker) are generated from shared templates via `_generator/generate.py`. Do not edit their plugin files directly — edit the templates or config in `_generator/` and re-run the generator. See [`_generator/GENERATOR.md`](_generator/GENERATOR.md) for full documentation.
+
 ## Developer Docs
 
 - Settings Overview: <https://help.trmnl.com/en/articles/10542599-importing-and-exporting-private-plugins>
