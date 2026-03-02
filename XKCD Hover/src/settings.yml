@@ -16,5 +16,21 @@ custom_fields:
   description: XKCD Comic by Randall Munroe with hover text
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/XKCD%20Hover
+- keyname: show_title
+  field_type: select
+  options:
+  - show: show
+  - hide: hide
+  default: show
+  name: Show Title
+  description: Show the comic title above the image
+- keyname: show_alt
+  field_type: select
+  options:
+  - show: show
+  - hide: hide
+  default: show
+  name: Show Hover Text
+  description: Show the hover/alt text below the image
 name: XKCD Comic (with Hover text)
 refresh_interval: 720

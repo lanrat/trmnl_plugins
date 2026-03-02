@@ -1,6 +1,6 @@
 {% template comic %}
 <div class="view bg-white">
-  {% if title %}
+  {% if title and trmnl.plugin_settings.custom_fields_values.show_title != 'hide' %}
   <div class="w--full text--center p--1 title title--small">
     {{ title }}
   </div>
@@ -12,7 +12,7 @@
     <p class="text--black">Error Loading Image</p>
     {% endif %}
   </div>
-  {% if alt %}
+  {% if alt and trmnl.plugin_settings.custom_fields_values.show_alt != 'hide' %}
   <div class="w--full text--center p--1 description description--large clamp--none">
     {{alt}}
   </div>
