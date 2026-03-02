@@ -16,5 +16,13 @@ custom_fields:
   description: Displays NASA's image of the day
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/NASA%20Image%20of%20the%20Day
+- keyname: show_title_bar
+  field_type: select
+  options:
+  - show: show
+  - hide: hide
+  default: show
+  name: Show Title Bar
+  description: Show the NASA logo and image title at the bottom
 name: NASA Image of the Day
 refresh_interval: 360

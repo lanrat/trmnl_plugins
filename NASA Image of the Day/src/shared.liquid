@@ -7,12 +7,14 @@
     <p class="text--black">Error Loading Image</p>
     {% endif %}
   </div>
+  {% if trmnl.plugin_settings.custom_fields_values.show_title_bar != 'hide' %}
   <div class="title_bar">
     <img class="image image-stroke" src="https://upload.wikimedia.org/wikipedia/commons/a/a3/NASA_Worm_logo.svg" alt="NASA Logo" />
     {% if rss.channel.item %}
     <span class="instance text-stroke">{{ rss.channel.item[0].title }}</span>
     {% endif %}
   </div>
+  {% endif %}
 </div>
 
 <style>
