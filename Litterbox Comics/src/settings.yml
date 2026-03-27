@@ -4,6 +4,8 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
+framework_version: 2.3.7
+serverless_language: 
 polling_url: https://www.litterboxcomics.com/feed/
 polling_headers: ''
 polling_body: ''
@@ -17,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Litterbox%20Comics
 name: Litterbox Comics
-refresh_interval: 720
+refresh_interval: 360

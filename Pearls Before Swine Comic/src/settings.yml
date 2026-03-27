@@ -4,6 +4,8 @@ no_screen_padding: 'yes'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
+framework_version: 2.3.7
+serverless_language: 
 polling_url: https://comiccaster.xyz/rss/pearlsbeforeswine
 polling_headers: ''
 polling_body: ''
@@ -17,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Pearls%20Before%20Swine%20Comic
 name: Daily Pearls Before Swine Comic
-refresh_interval: 360
+refresh_interval: 720

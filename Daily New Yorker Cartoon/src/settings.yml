@@ -4,6 +4,8 @@ no_screen_padding: 'yes'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
+framework_version: 2.3.7
+serverless_language: 
 polling_url: https://comiccaster.xyz/feeds/newyorker-daily-cartoon.xml
 polling_headers: ''
 polling_body: ''
