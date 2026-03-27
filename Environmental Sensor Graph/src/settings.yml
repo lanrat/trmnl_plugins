@@ -52,7 +52,7 @@ custom_fields:
   description: Overlay the previous period as a second line for comparison
 - keyname: doesnt_matter
   name: Environmental Sensor Graph
-  category1: comics
+  category: environment
   field_type: author_bio
   description: Graphs data from connected environmental sensors including temperature, humidity, carbon dioxide, and pressure.
   github_url: https://github.com/lanrat/trmnl_plugins
