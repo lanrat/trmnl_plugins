@@ -1,6 +1,6 @@
 # BMP280 TRMNL Mount
 
-A minimal mount to connect a BMP280 sensor to the Trmnl's rear hanging groove.
+A minimal mount to connect a BMP280 sensor to the Trmnl's rear hanging slot.
 
 Fits in between the Trmnl and the sensor like a lego.
 
