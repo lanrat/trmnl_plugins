@@ -1,0 +1,60 @@
+---
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: "{}"
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: ''
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+id: 256958
+custom_fields:
+- keyname: sensor_type
+  field_type: select
+  options:
+  - temperature
+  - humidity
+  - carbon_dioxide
+  - pressure
+  default: temperature
+  name: Sensor Type
+  description: Which sensor reading to display
+  help_text: Temperature, Humidity, CO₂, or Pressure
+- keyname: period
+  field_type: select
+  options:
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  default: '1'
+  name: Period (Days)
+  description: Number of days of data to display
+  help_text: Select how many days of history to show (1-7)
+- keyname: units
+  field_type: select
+  options:
+  - imperial
+  - metric
+  default: imperial
+  name: Units
+  description: Unit system for display
+  help_text: 'Imperial: °F, inHg | Metric: °C, hPa | Humidity & CO₂ are the same for both'
+- keyname: show_prior_period
+  field_type: boolean
+  default: false
+  name: Show Prior Period?
+  description: Overlay the previous period as a second line for comparison
+- keyname: doesnt_matter
+  name: Environmental Sensor Graph
+  category1: comics
+  field_type: author_bio
+  description: Graphs data from connected environmental sensors including temperature, humidity, carbon dioxide, and pressure.
+  github_url: https://github.com/lanrat/trmnl_plugins
+name: Environmental Sensor Graph
+refresh_interval: 30

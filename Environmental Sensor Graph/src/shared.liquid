@@ -1,0 +1,304 @@
+<style>
+  .view--half_vertical .stat-min,
+  .view--half_vertical .stat-avg,
+  .view--half_vertical .stat-max,
+  .view--quadrant .stat-min,
+  .view--quadrant .stat-avg,
+  .view--quadrant .stat-max {
+    display: none;
+  }
+</style>
+
+
+<div class="layout layout--col gap--space-between">
+
+  <div class="grid">
+    <div class="row">
+      <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+
+        <div class="item col--span-1">
+          <div class="meta"></div>
+          <div class="content">
+            <span style="white-space: nowrap; display: flex; justify-content: center; align-items: baseline;">
+              <span class="value value--tnums" data-value-type="number" id="stat-now">--</span>
+              <span class="value value--tnums" style="margin-left: 2px;" id="unit-now"></span>
+            </span>
+            <span class="label">Now</span>
+          </div>
+        </div>
+
+        <div class="item col--span-1 stat-min">
+          <div class="meta"></div>
+          <div class="content">
+            <span style="white-space: nowrap; display: flex; justify-content: center; align-items: baseline;">
+              <span class="value value--tnums" data-value-type="number" id="stat-min">--</span>
+              <span class="value value--tnums" style="margin-left: 2px;" id="unit-min"></span>
+            </span>
+            <span class="label">Min</span>
+          </div>
+        </div>
+
+        <div class="item col--span-1 stat-avg">
+          <div class="meta"></div>
+          <div class="content">
+            <span style="white-space: nowrap; display: flex; justify-content: center; align-items: baseline;">
+              <span class="value value--tnums" data-value-type="number" id="stat-avg">--</span>
+              <span class="value value--tnums" style="margin-left: 2px;" id="unit-avg"></span>
+            </span>
+            <span class="label">Avg</span>
+          </div>
+        </div>
+
+        <div class="item col--span-1 stat-max">
+          <div class="meta"></div>
+          <div class="content">
+            <span style="white-space: nowrap; display: flex; justify-content: center; align-items: baseline;">
+              <span class="value value--tnums" data-value-type="number" id="stat-max">--</span>
+              <span class="value value--tnums" style="margin-left: 2px;" id="unit-max"></span>
+            </span>
+            <span class="label">Max</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://trmnl.com/js/highcharts/12.3.0/highcharts.js"></script>
+  <script src="https://trmnl.com/js/highcharts/12.3.0/highcharts-more.js"></script>
+  <script src="https://trmnl.com/js/highcharts/12.3.0/pattern-fill.js"></script>
+
+  <div class="w--full" style="flex: 1; position: relative; margin-top: 1rem;">
+    <div id="chart-container" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
+  </div>
+
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg">
+  <span class="title" id="chart-title"></span>
+  <span class="instance" id="last-updated">--:--</span>
+</div>
+
+<script type="text/javascript">
+  // 0. User Settings & Timezone
+  const userTimeZone = "{{ trmnl.user.time_zone_iana | default: 'UTC' }}";
+  const utcOffsetSeconds = {{ trmnl.user.utc_offset | default: 0 }};
+  const timezoneOffsetMinutes = -(utcOffsetSeconds / 60);
+
+  const periodDays    = parseInt("{{ trmnl.plugin_settings.custom_fields_values.period | default: '1' }}") || 1;
+  const useMetric     = "{{ trmnl.plugin_settings.custom_fields_values.units | default: 'imperial' }}" === "metric";
+  const sensorType    = "{{ trmnl.plugin_settings.custom_fields_values.sensor_type | default: 'temperature' }}";
+  const showPrior     = "{{ trmnl.plugin_settings.custom_fields_values.show_prior_period | default: 'false' }}" === "true";
+
+  // 1. Per-sensor-type config: label, unit string, conversion fn, display precision
+  const sensorConfig = {
+    temperature: {
+      label: 'Temperature',
+      unit: useMetric ? '\u00B0C' : '\u00B0F',
+      convert: v => useMetric ? v : (v * 9 / 5) + 32,
+      precision: 1,
+      yFormatter: function() { return Math.round(this.value) + (useMetric ? '\u00B0C' : '\u00B0F'); }
+    },
+    humidity: {
+      label: 'Humidity',
+      unit: '%',
+      convert: v => v,
+      precision: 1,
+      yFormatter: function() { return Math.round(this.value) + '%'; }
+    },
+    carbon_dioxide: {
+      label: 'CO\u2082',
+      unit: 'ppm',
+      convert: v => v,
+      precision: 0,
+      yFormatter: function() { return Math.round(this.value) + ' ppm'; }
+    },
+    pressure: {
+      label: 'Pressure',
+      unit: useMetric ? 'hPa' : 'inHg',
+      convert: v => useMetric ? v : v * 0.02953,
+      precision: useMetric ? 0 : 2,
+      yFormatter: function() {
+        return useMetric
+          ? Math.round(this.value) + ' hPa'
+          : this.value.toFixed(2) + ' inHg';
+      }
+    }
+  };
+
+  const cfg = sensorConfig[sensorType] || sensorConfig.temperature;
+
+  // Set unit labels in the stat boxes
+  ['now', 'min', 'avg', 'max'].forEach(id => {
+    const el = document.getElementById('unit-' + id);
+    if (el) el.textContent = cfg.unit;
+  });
+
+  // 2. Ingest Data
+  const sensorData = {{ sensor_readings | json }};
+  const deviceId = Object.keys(sensorData)[0];
+  const rawData  = (sensorData[deviceId] && sensorData[deviceId][sensorType]) || [];
+
+  // 3. No-data state
+  if (rawData.length === 0) {
+    const label = sensorType.replace('_', ' ');
+    document.getElementById('chart-container').innerHTML =
+      "<div style='display:flex;align-items:center;justify-content:center;height:100%;font-size:1.6rem;color:#555;'>No sensor data for " + label + "</div>";
+  } else {
+    // 4. Filter to selected period
+    const periodMs   = periodDays * 24 * 60 * 60 * 1000;
+    const allTs      = rawData.map(e => new Date(Object.keys(e)[0].replace(' UTC', 'Z')).getTime());
+    const latestTs   = Math.max(...allTs);
+    const cutoffTs   = latestTs - periodMs;
+    const priorCutTs = cutoffTs - periodMs;
+
+    const chartData  = [];
+    const priorData  = [];
+    let min = Infinity, max = -Infinity, sum = 0;
+
+    rawData.forEach(entry => {
+      const tsStr    = Object.keys(entry)[0];
+      const timestamp = new Date(tsStr.replace(' UTC', 'Z')).getTime();
+      const rawVal   = entry[tsStr];
+      const val      = cfg.convert(rawVal);
+
+      if (timestamp >= cutoffTs) {
+        chartData.push([timestamp, val]);
+        if (val < min) min = val;
+        if (val > max) max = val;
+        sum += val;
+      }
+
+      if (showPrior && timestamp >= priorCutTs && timestamp < cutoffTs) {
+        priorData.push([timestamp + periodMs, val]);
+      }
+    });
+
+    // 5. Update Time — use timestamp of the last sensor reading for the selected type
+    const lastReadingTs = chartData.length > 0 ? chartData[chartData.length - 1][0] : 0;
+    if (lastReadingTs > 0) {
+      document.getElementById('last-updated').innerText = new Date(lastReadingTs).toLocaleTimeString('en-US', {
+        timeZone: userTimeZone, hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    // 6. Update stat boxes
+    const avg = sum / chartData.length;
+    const now = chartData[chartData.length - 1][1];
+    const prec = cfg.precision;
+
+    document.getElementById('stat-now').innerHTML = now.toFixed(prec);
+    document.getElementById('stat-min').innerHTML = min.toFixed(prec);
+    document.getElementById('stat-avg').innerHTML = avg.toFixed(prec);
+    document.getElementById('stat-max').innerHTML = max.toFixed(prec);
+
+    // 7. Highcharts timezone
+    Highcharts.setOptions({ time: { timezoneOffset: timezoneOffsetMinutes } });
+
+    // 8. X-axis label format
+    const xAxisLabelFormat = periodDays <= 1 ? '{value:%I:%M %p}' : '{value:%b %e, %I%p}';
+
+    // 9. Build series
+    const series = [{
+      data: chartData,
+      lineWidth: 5,
+      color: '#000000',
+      name: 'Current',
+      zIndex: 1,
+      fillColor: {
+        pattern: {
+          image: 'https://trmnl.com/images/grayscale/gray-5.png',
+          width: 12,
+          height: 12
+        }
+      }
+    }];
+
+    if (showPrior && priorData.length > 0) {
+      series.push({
+        data: priorData,
+        lineWidth: 2,
+        color: '#000000',
+        dashStyle: 'ShortDot',
+        name: 'Prior',
+        zIndex: 2,
+        fillColor: 'none',
+        marker: { enabled: false }
+      });
+    }
+
+    // 10. Render chart
+    Highcharts.chart('chart-container', {
+      chart: { type: 'areaspline', animation: false, spacing: [10, 10, 20, 10] },
+      title: { text: null },
+      plotOptions: {
+        series: {
+          animation: false,
+          enableMouseTracking: false,
+          states: { hover: { enabled: false } },
+          marker: { enabled: false },
+          threshold: null
+        }
+      },
+      series: series,
+      tooltip: { enabled: false },
+      legend: { enabled: false },
+      yAxis: {
+        labels: {
+          style: { fontSize: '20px', color: '#000000', fontWeight: 'bold' },
+          x: -5,
+          formatter: cfg.yFormatter
+        },
+        gridLineDashStyle: 'shortdot',
+        gridLineWidth: 1,
+        gridLineColor: '#000000',
+        tickAmount: 5,
+        title: { text: null }
+      },
+      xAxis: {
+        type: 'datetime',
+        labels: {
+          style: { fontSize: '18px', color: '#000000', fontWeight: 'bold' },
+          format: xAxisLabelFormat
+        },
+        lineWidth: 1,
+        lineColor: '#000000',
+        gridLineDashStyle: 'dot',
+        tickWidth: 2,
+        tickLength: 8,
+        tickColor: '#000000',
+        gridLineWidth: 1,
+        gridLineColor: '#000000',
+        tickPixelInterval: 140,
+        offset: 0,
+        margin: 0,
+        title: { text: null }
+      },
+      credits: { enabled: false }
+    });
+  }
+
+  // Update title bar with sensor type label
+  const sensorLabels = {
+    temperature: 'Temperature',
+    humidity: 'Humidity',
+    carbon_dioxide: 'CO\u2082',
+    pressure: 'Pressure'
+  };
+  const titleEl = document.getElementById('chart-title');
+  if (titleEl) {
+    titleEl.textContent = (sensorLabels[sensorType] || sensorType) + ' Graph';
+  }
+</script>
+<script>
+(function() {
+  var view = document.querySelector('.view--half_vertical, .view--quadrant');
+  if (view) {
+    var grid = view.querySelector('.row .grid');
+    if (grid) {
+      grid.style.setProperty('grid-template-columns', '1fr', 'important');
+    }
+  }
+})();
+</script>
