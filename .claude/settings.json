@@ -4,14 +4,21 @@
       "WebFetch(domain:help.trmnl.com)",
       "Bash(grep:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.usetrmnl.com)",
+      "WebFetch(domain:docs.trmnl.com)",
+      "WebFetch(domain:trmnl.com)",
+      "WebFetch(domain:lanrat.github.io)",
       "Bash(trmnlp --help:*)",
-      "Read(//home/lanrat/.config/trmnlp/**)",
-      "Read(//home/lanrat/code/trmnl_plugins/**)",
-      "Bash(/home/lanrat/code/trmnl_plugins/_generator/.venv/bin/python3:*)",
       "WebFetch(domain:0.0.0.0)",
       "WebFetch(domain:comiccaster.xyz)",
-      "WebFetch(domain:help.usetrmnl.com)"
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__get_console_message",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__take_snapshot",
+      "Bash(curl:*)",
+      "Bash(find:*)"
     ]
   }
 }
