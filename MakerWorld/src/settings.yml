@@ -12,10 +12,10 @@ polling_body: ''
 id: 272038
 custom_fields:
 - keyname: doesnt_matter
-  name: MakerWorld Trending
+  name: MakerWorld Trending Models
   category: discovery
   field_type: author_bio
   description: Show Trending projects from MakerWorld
   github_url: https://github.com/lanrat/trmnl_plugins
-name: MakerWorld Trending
+name: MakerWorld Trending Models
 refresh_interval: 360
