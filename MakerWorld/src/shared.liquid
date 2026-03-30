@@ -60,6 +60,15 @@
     align-items: center;
   }
 
+  .card__author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+    margin-left: auto;
+    text-align: right;
+  }
+
   .card__stats .label {
     white-space: nowrap;
   }
@@ -88,6 +97,8 @@
       <div class="card__stats">
         <span class="label label--small" data-stat="downloads" data-raw-value="{{ item.downloadCount }}">{{ item.downloadCount }}</span>
         <span class="label label--small" data-stat="likes" data-raw-value="{{ item.likeCount }}">{{ item.likeCount }}</span>
+        <span class="label label--small" data-stat="prints" data-raw-value="{{ item.printCount }}">{{ item.printCount }}</span>
+        <span class="label label--small card__author">{{ item.designCreator.name }}</span>
       </div>
     </div>
   </div>
@@ -115,7 +126,8 @@
   }
   document.querySelectorAll('[data-raw-value]').forEach(function(el) {
     var raw = el.getAttribute('data-raw-value');
-    var icon = el.getAttribute('data-stat') === 'downloads' ? '\u2B07 ' : '\u2665 ';
+    var stat = el.getAttribute('data-stat');
+    var icon = stat === 'downloads' ? '\u2B07 ' : stat === 'prints' ? '\u2399 ' : '\u2665 ';
     el.textContent = icon + fmt(raw);
   });
 
