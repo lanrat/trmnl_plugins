@@ -1,0 +1,21 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: ''
+polling_url: https://makerworld.com/api/v1/search-service/select/design/nav?navKey=Trending&offset=0&limit=20
+polling_headers: ''
+polling_body: ''
+id: 272038
+custom_fields:
+- keyname: doesnt_matter
+  name: MakerWorld Trending
+  category: discovery
+  field_type: author_bio
+  description: Show Trending projects from MakerWorld
+  github_url: https://github.com/lanrat/trmnl_plugins
+name: MakerWorld Trending
+refresh_interval: 360

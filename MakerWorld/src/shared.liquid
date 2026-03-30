@@ -1,0 +1,146 @@
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
+    grid-template-rows: repeat(var(--rows, 2), 1fr);
+    gap: 10px;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .card__image {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 6px;
+    min-height: 0;
+  }
+
+  .card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card__body {
+    padding-top: 3px;
+  }
+
+  .card__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card__stats {
+    margin-top: 2px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .card__stats .label {
+    white-space: nowrap;
+  }
+
+  .title_bar {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+</style>
+
+{% if hits and hits.size > 0 %}
+<div class="card-grid">
+  {% for item in hits limit: 20 %}
+  <div class="card">
+    <div class="card__image">
+      {% assign is_gif = item.cover | downcase | split: '.gif' %}
+      {% if is_gif.size > 1 and item.coverPortrait != blank %}
+        {% assign cover_url = item.coverPortrait %}
+      {% else %}
+        {% assign cover_url = item.cover %}
+      {% endif %}
+      <img class="image image-dither" src="{{ cover_url }}" alt="{{ item.title }}" />
+    </div>
+    <div class="card__body">
+      <span class="title title--small card__title">{% if item.titleTranslated != blank %}{{ item.titleTranslated }}{% else %}{{ item.title }}{% endif %}</span>
+      <div class="card__stats">
+        <span class="label label--small" data-stat="downloads" data-raw-value="{{ item.downloadCount }}">{{ item.downloadCount }}</span>
+        <span class="label label--small" data-stat="likes" data-raw-value="{{ item.likeCount }}">{{ item.likeCount }}</span>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="layout layout--col layout--center" style="height:100%;">
+  <span class="title title--small">No trending designs available</span>
+</div>
+{% endif %}
+
+<div class="title_bar">
+  <span class="title">MakerWorld Trending</span>
+</div>
+
+<script>
+(function() {
+  // Format large numbers: 1200 -> 1.2k, 1500000 -> 1.5M
+  function fmt(n) {
+    n = parseInt(n, 10);
+    if (isNaN(n)) return '0';
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return n.toString();
+  }
+  document.querySelectorAll('[data-raw-value]').forEach(function(el) {
+    var raw = el.getAttribute('data-raw-value');
+    var icon = el.getAttribute('data-stat') === 'downloads' ? '\u2B07 ' : '\u2665 ';
+    el.textContent = icon + fmt(raw);
+  });
+
+  // Adapt grid to available space, then randomize which cards are shown
+  var grid = document.querySelector('.card-grid');
+  if (grid) {
+    var w = grid.clientWidth;
+    var h = grid.clientHeight;
+    var cols = Math.max(1, Math.floor(w / 220));
+    var rows = Math.max(1, Math.floor(h / 180));
+    var total = cols * rows;
+    grid.style.setProperty('--cols', cols);
+    grid.style.setProperty('--rows', rows);
+
+    // Shuffle cards, then show only as many as fit
+    var cards = Array.from(grid.querySelectorAll('.card'));
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      grid.appendChild(cards[j]);
+      cards.splice(j, 1, cards[i]);
+    }
+    cards = grid.querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].style.display = i < total ? '' : 'none';
+    }
+  }
+})();
+</script>
