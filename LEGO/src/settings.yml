@@ -1,0 +1,30 @@
+---
+strategy: polling
+no_screen_padding: 'yes'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: python
+polling_url: https://trmnl.com/custom_plugin_example_data.json
+polling_headers: ''
+polling_body: ''
+id: 269418
+custom_fields:
+- keyname: doesnt_matter
+  name: Random LEGO
+  field_type: author_bio
+  category: images
+  description: Display a random LEGO Minifig or Set from Rebrickable.
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: 
+- keyname: dataset
+  field_type: select
+  name: Catalog
+  description: Select what to display
+  options:
+  - Sets
+  - Minifigs
+  default: Sets
+name: Random LEGO
+refresh_interval: 240

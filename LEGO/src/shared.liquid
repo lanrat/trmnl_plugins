@@ -1,0 +1,44 @@
+<style>
+    .view {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          position: relative;
+    }
+    .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+          overflow: hidden;
+          min-height: 0;
+    }
+    .image-container img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          display: block;
+          border-radius: 5px;
+    }
+  </style>
+<div class="view bg-white">
+    <div class="image-container" id="lego-image-container">
+      {% if lego.img_url %}
+        <img class="image image-dither" src="{{lego.img_url}}"/>
+      {% else %}
+        <p class="text--black">Error Loading LEGO...</p>
+      {% endif %}
+    </div>
+    <div class="title_bar" id="lego-set-info">
+          <span class="text-stroke" id="lego-name">{{lego.name}}</span>
+        <span class="instance text-stroke" id="lego-meta">
+          {% if lego.set_num %}{{lego.set_num}}{% endif %}
+          {% if lego.year %}({{lego.year}}){% endif %}
+        </span>
+    </div>
+</div>
