@@ -19,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Pearls%20Before%20Swine%20Comic
 name: Daily Pearls Before Swine Comic
-refresh_interval: 720
+refresh_interval: 480

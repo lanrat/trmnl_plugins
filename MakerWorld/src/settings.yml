@@ -5,7 +5,7 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: ''
+serverless_language: 
 polling_url: https://makerworld.com/api/v1/search-service/select/design/nav?navKey=Trending&offset=0&limit=20
 polling_headers: ''
 polling_body: ''

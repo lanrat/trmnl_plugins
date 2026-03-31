@@ -27,4 +27,4 @@ custom_fields:
   name: Show Title Bar
   description: Show the NASA logo and image title at the bottom
 name: NASA Image of the Day
-refresh_interval: 360
+refresh_interval: 480

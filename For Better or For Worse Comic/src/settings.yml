@@ -19,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/For%20Better%20or%20For%20Worse%20Comic
 name: Daily For Better or For Worse Comic
-refresh_interval: 360
+refresh_interval: 480

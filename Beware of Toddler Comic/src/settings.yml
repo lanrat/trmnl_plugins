@@ -19,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Beware%20of%20Toddler%20Comic
 name: Beware of Toddler Comic
-refresh_interval: 360
+refresh_interval: 480

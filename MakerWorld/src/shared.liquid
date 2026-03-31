@@ -127,7 +127,7 @@
   document.querySelectorAll('[data-raw-value]').forEach(function(el) {
     var raw = el.getAttribute('data-raw-value');
     var stat = el.getAttribute('data-stat');
-    var icon = stat === 'downloads' ? '\u2B07 ' : stat === 'prints' ? '\u2399 ' : '\u2665 ';
+    var icon = stat === 'downloads' ? '\u2B07 ' : stat === 'prints' ? '\ud83d\udda8 ' : '\u2665 ';
     el.textContent = icon + fmt(raw);
   });
 

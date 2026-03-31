@@ -35,4 +35,4 @@ custom_fields:
   name: Show Hover Text
   description: Show the hover/alt text below the image
 name: XKCD Comic (with Hover text)
-refresh_interval: 360
+refresh_interval: 480
