@@ -1,0 +1,21 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: 
+polling_url: https://nitter.net/twonkscomics/rss
+polling_headers: User-Agent=FreshRSS
+polling_body: ''
+id: 272414
+custom_fields:
+- keyname: doesnt_matter
+  name: Twonks Comics
+  category: comics
+  field_type: author_bio
+  description: Displays Twonks comics by Steve Nelson
+  github_url: https://github.com/lanrat/trmnl_plugins
+name: Twonks Comics
+refresh_interval: 480
