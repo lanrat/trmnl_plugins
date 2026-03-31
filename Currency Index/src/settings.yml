@@ -1,0 +1,54 @@
+---
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: "{}"
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: ''
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+id: 273095
+custom_fields:
+- keyname: doesnt_matter
+  name: Currency Index
+  category: finance,ecommerce
+  field_type: author_bio
+  description: Time-series chart of currency exchange rates relative to a base currency, powered by the Frankfurter API.
+  github_url: https://github.com/lanrat/trmnl_plugins
+- keyname: base_currency
+  field_type: select
+  options:
+  - USD
+  - EUR
+  - GBP
+  - JPY
+  - CHF
+  - CAD
+  - AUD
+  default: USD
+  name: Base Currency
+  description: The reference currency (all others shown relative to this)
+  help_text: Select your home currency
+- keyname: currencies
+  field_type: string
+  placeholder: EUR,GBP,JPY,CAD,AUD,CNY
+  default: EUR,GBP,JPY,CAD,AUD,CNY
+  name: Currencies to Track
+  description: Comma-separated list of currency codes to display
+  help_text: Up to 6 currencies. Available codes at api.frankfurter.dev/v1/currencies
+- keyname: period
+  field_type: select
+  options:
+  - '7'
+  - '30'
+  - '90'
+  - '180'
+  - '365'
+  default: '30'
+  name: Period (Days)
+  description: How many days of history to show
+  help_text: 7 days, 30 days, 90 days, 6 months, or 1 year
+name: Currency Index
+refresh_interval: 480
