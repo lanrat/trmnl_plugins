@@ -1,4 +1,4 @@
-# [Litterbox Comics](https://usetrmnl.com/recipes/148700)
+# [Litterbox Comics](https://trmnl.com/recipes/148700?ref=mrlanrat)
 
 Displays the daily [Litterbox Comic](https://www.litterboxcomics.com/) on your TRMNL device.
 

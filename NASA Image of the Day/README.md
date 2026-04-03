@@ -1,4 +1,4 @@
-# [NASA Image of the Day](https://usetrmnl.com/recipes/76645)
+# [NASA Image of the Day](https://trmnl.com/recipes/76645?ref=mrlanrat)
 
 Displays [NASA's Image of the Day](https://www.nasa.gov/image-of-the-day/) on your TRMNL device.
 

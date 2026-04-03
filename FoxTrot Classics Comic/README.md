@@ -1,4 +1,4 @@
-# [FoxTrot Classics Comic](https://usetrmnl.com/recipes/122369)
+# [FoxTrot Classics Comic](https://trmnl.com/recipes/122369?ref=mrlanrat)
 
 Displays the daily [FoxTrot Classics](https://www.gocomics.com/foxtrotclassics) comic on your TRMNL device.
 

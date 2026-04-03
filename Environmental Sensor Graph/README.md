@@ -1,4 +1,4 @@
-# [Environmental Sensor Graph](https://usetrmnl.com/recipes/256958)
+# [Environmental Sensor Graph](https://trmnl.com/recipes/256958?ref=mrlanrat)
 
 Displays a graph of your selected environmental sensor over a selected period of time on your TRMNL device.
 

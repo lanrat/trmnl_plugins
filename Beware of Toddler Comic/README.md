@@ -1,4 +1,4 @@
-# [Beware of Toddler Comic](https://usetrmnl.com/recipes/131756)
+# [Beware of Toddler Comic](https://trmnl.com/recipes/131756?ref=mrlanrat)
 
 Displays the daily [Beware of Toddler comic](https://www.bewareoftoddler.com/) on your TRMNL device.
 

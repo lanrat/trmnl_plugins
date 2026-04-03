@@ -1,4 +1,4 @@
-# [Day Night Map](https://usetrmnl.com/recipes/127208)
+# [Day Night Map](https://trmnl.com/recipes/127208?ref=mrlanrat)
 
 A real-time visualization of day and night regions across the world using accurate solar and lunar positioning calculations. Powered by the [Day Night Map](https://lanrat.github.io/day-night-map/) project.
 

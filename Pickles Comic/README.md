@@ -1,4 +1,4 @@
-# [Pickles Comic](https://usetrmnl.com/recipes/122316)
+# [Pickles Comic](https://trmnl.com/recipes/122316?ref=mrlanrat)
 
 Displays the daily [Pickles comic](https://www.gocomics.com/pickles) on your TRMNL device.
 

@@ -1,4 +1,4 @@
-# [Far Side Comic](https://usetrmnl.com/recipes/122324)
+# [Far Side Comic](https://trmnl.com/recipes/122324?ref=mrlanrat)
 
 Displays the daily [Far Side comic](https://www.thefarside.com/) on your TRMNL device.
 

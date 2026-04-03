@@ -1,6 +1,6 @@
-# TRMNL Plugins
+# [TRMNL Plugins](https://trmnl.com/recipes?user_id=10066&ref=mrlanrat)
 
-A collection of custom plugins for [TRMNL](https://usetrmnl.com/) e-ink displays.
+A collection of custom plugins for [TRMNL](https://trmnl.com/recipes?user_id=10066&ref=mrlanrat) e-ink displays.
 
 ## Overview
 
@@ -11,7 +11,7 @@ This repository contains various TRMNL plugins, each in its own directory. Each 
 ### Prerequisites
 
 - Docker
-- TRMNL API key (obtain from [your TRMNL account](https://usetrmnl.com/account))
+- TRMNL API key (obtain from [your TRMNL account](https://trmnl.com/account?ref=mrlanrat))
 
 ### Setup
 
@@ -57,8 +57,8 @@ Some comic plugins are generated from shared templates using a Python-based code
 
 ## Debugging
 
-[Plugin in a Degraded State (Reset)](https://help.usetrmnl.com/en/articles/12384091-plugin-in-a-degraded-state-reset)
+[Plugin in a Degraded State (Reset)](https://help.trmnl.com/en/articles/12384091-plugin-in-a-degraded-state-reset?ref=mrlanrat)
 
 ## Misc
 
-[Dynamic Polling URLs](https://help.usetrmnl.com/en/articles/12689499-dynamic-polling-urls)
+[Dynamic Polling URLs](https://help.trmnl.com/en/articles/12689499-dynamic-polling-urls?ref=mrlanrat)

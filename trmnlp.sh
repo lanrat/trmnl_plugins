@@ -21,9 +21,9 @@ PLUGIN_PATH_INPUT="$1"
 shift
 
 # set TRMNL_API_KEY in trmnl.env
-# https://usetrmnl.com/account
+# https://trmnl.com/account
 if [[ ! -f "$SCRIPT_DIR/trmnl.env" ]]; then
-    echo "trmnl.env not found. Please visit https://usetrmnl.com/account to get your API key."
+    echo "trmnl.env not found. Please visit https://trmnl.com/account to get your API key."
     read -r -p "Enter your TRMNL API key: " api_key
     if [[ -z "$api_key" ]]; then
         echo "Error: API key cannot be empty" >&2
