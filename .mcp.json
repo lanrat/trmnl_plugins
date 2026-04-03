@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "trmnl": {
+      "type": "http",
+      "url": "https://trmnl.com/mcp?api_key=${TRMNL_MCP_API_KEY}"
+    },
     "chrome-devtools": {
       "type": "stdio",
       "command": "npx",

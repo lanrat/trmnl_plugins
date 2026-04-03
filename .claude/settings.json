@@ -18,7 +18,19 @@
       "mcp__chrome-devtools__evaluate_script",
       "mcp__chrome-devtools__take_snapshot",
       "Bash(curl:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebSearch",
+      "WebFetch(domain:collectapi.com)",
+      "WebFetch(domain:rapidapi.com)",
+      "WebFetch(domain:www.globalpetrolprices.com)",
+      "WebFetch(domain:zylalabs.com)",
+      "WebFetch(domain:docs.oilpriceapi.com)",
+      "WebFetch(domain:www.barchart.com)",
+      "WebFetch(domain:creativecommons.tankerkoenig.de)",
+      "WebFetch(domain:www.eia.gov)",
+      "WebFetch(domain:developer.nlr.gov)",
+      "WebFetch(domain:developer.here.com)",
+      "WebFetch(domain:www.gasbuddy.com)"
     ]
   }
 }
