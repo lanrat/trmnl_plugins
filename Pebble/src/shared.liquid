@@ -30,23 +30,16 @@
   .card__image {
     width: 100%;
     overflow: hidden;
-    border-radius: 6px;
     min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
   }
 
   .card__image img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
     display: block;
-  }
-
-  .card__body {
-    padding-top: 3px;
   }
 
   .card__title {
@@ -58,7 +51,6 @@
   }
 
   .card__stats {
-    margin-top: 2px;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -70,7 +62,6 @@
     min-width: 0;
     flex-shrink: 1;
     margin-left: auto;
-    text-align: right;
   }
 
   .card__stats .label {
@@ -92,13 +83,12 @@
 
 {%- comment -%} Data is pre-slimmed by src/transform.js into pebble.items. {%- endcomment -%}
 {% assign items = pebble.items %}
-{% assign feed_label = pebble.feed_label %}
 
 {% if items and items.size > 0 %}
 <div class="card-grid">
   {% for item in items limit: 40 %}
   <div class="card">
-    <div class="card__image">
+    <div class="card__image rounded">
       {% assign use_screenshot = false %}
       {% if item.type == "watchface" %}
         {% assign use_screenshot = true %}
@@ -110,27 +100,27 @@
       {% else %}
         {% assign img_url = item.list_image_144 %}
       {% endif %}
-      <img class="image image-dither" src="{{ img_url }}" alt="{{ item.title }}" />
+      <img class="image image-dither image--contain" src="{{ img_url }}" alt="{{ item.title }}" />
     </div>
     <div class="card__body">
       <span class="title title--small card__title">{{ item.title }}</span>
       <div class="card__stats">
         {%- comment -%}
-          Type glyph: ⌚ for watchfaces, ▦ for apps.
+          Type glyph: ⌚ for watchfaces, ⊡ for apps.
           Alternates if these don't render well on e-ink:
             ○ / □   (circle / square — purest 1-bit)
             ◉ / ⊞   (bolder filled variants)
             ⏱ / ⚙   (stopwatch / gear)
+            ⌚ / ▣   (square-with-inner-square, launcher icon look)
+            ⌚ / ⌘   (Mac command symbol)
+            ⌚ / ▦   (orthogonal crosshatch grid)
         {%- endcomment -%}
         {% if item.type == "watchface" %}
         <span class="label label--small">⌚</span>
         {% else %}
-        <span class="label label--small">▦</span>
+        <span class="label label--small">⊡</span>
         {% endif %}
         <span class="label label--small" data-stat="hearts" data-raw-value="{{ item.hearts }}">{{ item.hearts }}</span>
-        {% if item.version != "" %}
-        <span class="label label--small">v{{ item.version }}</span>
-        {% endif %}
         <span class="label label--small card__author">{{ item.author }}</span>
       </div>
     </div>
@@ -138,7 +128,7 @@
   {% endfor %}
 </div>
 {% else %}
-<div class="layout layout--col layout--center" style="height:100%;">
+<div class="layout layout--col layout--center">
   <span class="title title--small">No Pebble apps available</span>
 </div>
 {% endif %}

@@ -19,7 +19,6 @@ function slim(item) {
     hearts: item.hearts || 0,
     list_image_144: listImg["144x144"] || "",
     screenshot_144x168: firstShot["144x168"] || "",
-    version: latest.version || "",
     published_date: latest.published_date || ""
   };
 }
