@@ -1,0 +1,191 @@
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
+    grid-template-rows: repeat(var(--rows, 2), 1fr);
+    gap: 10px;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .card__image {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 6px;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .card__image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .card__body {
+    padding-top: 3px;
+  }
+
+  .card__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card__stats {
+    margin-top: 2px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .card__author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .card__stats .label {
+    white-space: nowrap;
+  }
+
+  .title_bar {
+    flex-shrink: 0;
+    z-index: 1;
+  }
+</style>
+
+{%- comment -%}
+  Code-only toggle (not user-facing): show Pebble screenshots for apps too.
+  When false: faces -> screenshot, apps -> icon (list_image).
+  When true:  both faces and apps -> screenshot.
+{%- endcomment -%}
+{% assign show_screenshots_for_apps = false %}
+
+{%- comment -%} Data is pre-slimmed by src/transform.js into pebble.items. {%- endcomment -%}
+{% assign items = pebble.items %}
+{% assign feed_label = pebble.feed_label %}
+
+{% if items and items.size > 0 %}
+<div class="card-grid">
+  {% for item in items limit: 40 %}
+  <div class="card">
+    <div class="card__image">
+      {% assign use_screenshot = false %}
+      {% if item.type == "watchface" %}
+        {% assign use_screenshot = true %}
+      {% elsif show_screenshots_for_apps %}
+        {% assign use_screenshot = true %}
+      {% endif %}
+      {% if use_screenshot and item.screenshot_144x168 != "" %}
+        {% assign img_url = item.screenshot_144x168 %}
+      {% else %}
+        {% assign img_url = item.list_image_144 %}
+      {% endif %}
+      <img class="image image-dither" src="{{ img_url }}" alt="{{ item.title }}" />
+    </div>
+    <div class="card__body">
+      <span class="title title--small card__title">{{ item.title }}</span>
+      <div class="card__stats">
+        {%- comment -%}
+          Type glyph: ⌚ for watchfaces, ▦ for apps.
+          Alternates if these don't render well on e-ink:
+            ○ / □   (circle / square — purest 1-bit)
+            ◉ / ⊞   (bolder filled variants)
+            ⏱ / ⚙   (stopwatch / gear)
+        {%- endcomment -%}
+        {% if item.type == "watchface" %}
+        <span class="label label--small">⌚</span>
+        {% else %}
+        <span class="label label--small">▦</span>
+        {% endif %}
+        <span class="label label--small" data-stat="hearts" data-raw-value="{{ item.hearts }}">{{ item.hearts }}</span>
+        {% if item.version != "" %}
+        <span class="label label--small">v{{ item.version }}</span>
+        {% endif %}
+        <span class="label label--small card__author">{{ item.author }}</span>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="layout layout--col layout--center" style="height:100%;">
+  <span class="title title--small">No Pebble apps available</span>
+</div>
+{% endif %}
+
+<div class="title_bar">
+  <span class="title">Pebble Appstore</span>
+  <span class="instance">{{ pebble.instance_title }}</span>
+</div>
+
+<script>
+(function() {
+  // Format large numbers: 1200 -> 1.2k
+  function fmt(n) {
+    n = parseInt(n, 10);
+    if (isNaN(n)) return '0';
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return n.toString();
+  }
+  document.querySelectorAll('[data-raw-value]').forEach(function(el) {
+    var raw = el.getAttribute('data-raw-value');
+    el.textContent = '\u2665 ' + fmt(raw);
+  });
+
+  // Adapt grid to available space, then randomize which cards are shown.
+  // Pebble screenshots are 144x168 (taller than wide), so use a narrower
+  // column threshold than MakerWorld.
+  var grid = document.querySelector('.card-grid');
+  if (grid) {
+    var w = grid.clientWidth;
+    var h = grid.clientHeight;
+    var cols = Math.max(1, Math.floor(w / 160));
+    var rows = Math.max(1, Math.floor(h / 200));
+    var total = cols * rows;
+    grid.style.setProperty('--cols', cols);
+    grid.style.setProperty('--rows', rows);
+
+    var cards = Array.from(grid.querySelectorAll('.card'));
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      grid.appendChild(cards[j]);
+      cards.splice(j, 1, cards[i]);
+    }
+    cards = grid.querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].style.display = i < total ? '' : 'none';
+    }
+  }
+})();
+</script>
