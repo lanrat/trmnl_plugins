@@ -5,47 +5,49 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: 
-polling_url: |-
-  https://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchfaces?limit=40
-  https://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchapps-and-companions?limit=40
+serverless_language: ''
+polling_url: "https://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchfaces?limit=40\r\nhttps://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchapps-and-companions?limit=40"
 polling_headers: ''
 polling_body: ''
 id: 281436
 custom_fields:
 - keyname: doesnt_matter
-  name: Pebble Appstore
-  category: discovery
   field_type: author_bio
+  name: Pebble Appstore
   description: Browse watchfaces and apps from the repebble appstore (https://apps.repebble.com/) on your TRMNL device.
+  category: discovery
   github_url: https://github.com/lanrat/trmnl_plugins
 - keyname: feed
   field_type: select
-  options:
-  - most-loved
-  - all
-  default: most-loved
   name: Feed
   description: Which collection to browse
   help_text: most-loved = top picks by hearts; all = every app (use Sort below to choose update vs release order)
+  default: most-loved
+  options:
+  - most-loved
+  - all
+  conditional_validation:
+  - when: most-loved
+    hidden:
+    - sort_mode
 - keyname: sort_mode
   field_type: select
+  name: Sort
+  description: Sort order when browsing the 'all' feed
+  help_text: updated = recently updated (default); released = recently released (sorts by latest release date)
+  default: updated
   options:
   - updated
   - released
-  default: updated
-  name: Sort (when Feed = all)
-  description: Sort order when browsing the 'all' feed
-  help_text: updated = recently updated (default); released = recently released (sorts by latest release date)
 - keyname: content_type
   field_type: select
+  name: Content Type
+  description: Show watchfaces, apps, or both
+  help_text: both = mixed faces and apps; watchfaces = faces only; apps = apps only
+  default: both
   options:
   - both
   - watchfaces
   - apps
-  default: both
-  name: Content Type
-  description: Show watchfaces, apps, or both
-  help_text: both = mixed faces and apps; watchfaces = faces only; apps = apps only
 name: Pebble Appstore
 refresh_interval: 720
