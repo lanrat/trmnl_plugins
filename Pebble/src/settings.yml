@@ -14,7 +14,7 @@ custom_fields:
 - keyname: doesnt_matter
   field_type: author_bio
   name: Pebble Appstore
-  description: Browse watchfaces and apps from the repebble appstore (https://apps.repebble.com/) on your TRMNL device.
+  description: Browse watchfaces and apps from the <a href="https://apps.repebble.com/">repebble appstore</a> on your TRMNL device.
   category: discovery
   github_url: https://github.com/lanrat/trmnl_plugins
 - keyname: feed
