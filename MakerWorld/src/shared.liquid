@@ -81,7 +81,7 @@
 
 {% if hits and hits.size > 0 %}
 <div class="card-grid">
-  {% for item in hits limit: 20 %}
+  {% for item in hits %}
   <div class="card">
     <div class="card__image">
       {% assign is_gif = item.cover | downcase | split: '.gif' %}
