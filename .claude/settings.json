@@ -30,7 +30,8 @@
       "WebFetch(domain:www.eia.gov)",
       "WebFetch(domain:developer.nlr.gov)",
       "WebFetch(domain:developer.here.com)",
-      "WebFetch(domain:www.gasbuddy.com)"
+      "WebFetch(domain:www.gasbuddy.com)",
+      "WebFetch(domain:appstore-api.repebble.com)"
     ]
   }
 }

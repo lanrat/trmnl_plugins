@@ -5,7 +5,7 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: ''
+serverless_language: node
 polling_url: "https://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchfaces?limit=40\r\nhttps://appstore-api.repebble.com/api/v1/apps/collection/{{feed}}/watchapps-and-companions?limit=40"
 polling_headers: ''
 polling_body: ''
