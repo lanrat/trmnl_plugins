@@ -169,6 +169,10 @@
       }
     });
 
+    // Sort by timestamp ascending
+    chartData.sort((a, b) => a[0] - b[0]);
+    if (showPrior) priorData.sort((a, b) => a[0] - b[0]);
+    
     // 5. Update Time
     const lastReadingTs = chartData.length > 0 ? chartData[chartData.length - 1][0] : 0;
     if (lastReadingTs > 0) {
