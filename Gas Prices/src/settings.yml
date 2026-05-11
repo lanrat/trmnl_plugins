@@ -1,0 +1,48 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: python
+polling_url: https://trmnl.com/custom_plugin_example_data.json
+polling_headers: ''
+polling_body: ''
+id: 273126
+custom_fields:
+- keyname: doesnt_matter
+  name: Gas Prices
+  category: finance,travel
+  field_type: author_bio
+  description: Nearby gas station prices and area trends via GasBuddy.
+  github_url: https://github.com/lanrat/trmnl_plugins
+- keyname: search
+  field_type: string
+  placeholder: '90210'
+  default: ''
+  name: ZIP Code or City
+  description: Your ZIP code or city name to search nearby stations
+  help_text: e.g. 90210, Denver CO, Toronto ON
+- keyname: fuel_type
+  field_type: select
+  options:
+  - regular_gas
+  - midgrade_gas
+  - premium_gas
+  - diesel
+  default: regular_gas
+  name: Fuel Type
+  description: Which fuel type to display
+  help_text: Select your preferred fuel grade
+- keyname: num_stations
+  field_type: select
+  options:
+  - '5'
+  - '8'
+  - '10'
+  default: '8'
+  name: Number of Stations
+  description: How many nearby stations to show
+name: Gas Prices
+refresh_interval: 240

@@ -8,7 +8,9 @@ Usage:
 """
 
 import argparse
+import json
 import os
+import re
 import sys
 from pathlib import Path
 from urllib.parse import quote
@@ -40,6 +42,24 @@ PATTERN_TEMPLATES = {
     "caption": "shared_caption.liquid.j2",
     "panels": "shared_panels.liquid.j2",
 }
+
+TRANSFORM_TEMPLATES = {
+    "title": "transform_title.js.j2",
+    "caption": "transform_caption.js.j2",
+    "panels": "transform_panels.js.j2",
+}
+
+
+def caption_selector_to_regex(selector: str) -> str:
+    """Convert a CSS selector (a subset) into a regex that captures the inner HTML."""
+    selector = selector.strip()
+    if selector == "em":
+        return r"<em[^>]*>([\s\S]*?)</em>"
+    m = re.match(r"^([a-zA-Z]+)\[style\*=['\"]([^'\"]+)['\"]\]$", selector)
+    if m:
+        tag, kw = m.group(1), re.escape(m.group(2))
+        return rf"<{tag}[^>]*style=[\"'][^\"']*{kw}[^\"']*[\"'][^>]*>([\s\S]*?)</{tag}>"
+    raise ValueError(f"Unsupported caption_selector: {selector!r}")
 
 
 def load_config(generator_dir: Path) -> list[dict]:
@@ -85,6 +105,14 @@ def generate_comic(comic: dict, env: Environment, repo_root: Path) -> dict[str, 
         sys.exit(1)
     shared_template = env.get_template(PATTERN_TEMPLATES[pattern])
     files[f"{src_dir}/shared.liquid"] = shared_template.render(comic=comic)
+
+    # transform.js (pattern-specific)
+    transform_template = env.get_template(TRANSFORM_TEMPLATES[pattern])
+    transform_ctx = {"comic": comic}
+    if pattern == "caption":
+        selector = comic.get("caption_selector", "em")
+        transform_ctx["caption_regex_json"] = json.dumps(caption_selector_to_regex(selector))
+    files[f"{src_dir}/transform.js"] = transform_template.render(**transform_ctx)
 
     # .trmnlp.yml (in plugin root, not src/)
     trmnlp_template = env.get_template("trmnlp.yml.j2")

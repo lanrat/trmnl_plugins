@@ -52,10 +52,10 @@ _generator/.venv/bin/python3 _generator/generate.py --check
 
 ## Patterns
 
-The `pattern` field in `comics.yml` selects which `shared.liquid` template is used:
+The `pattern` field in `comics.yml` selects which `shared.liquid` and `transform.js` templates are used. RSS feeds are parsed server-side by `transform.js` (Node serverless function), which exposes a `comic` object with `title`, `link`, `pub_date`, `image_url`, and (for `caption`) `caption` — the Liquid template then renders directly from those merge variables.
 
-- **`title`** — Displays the comic image with a title bar at the bottom showing `rss.channel.item[0].title`. Used by Pickles and FoxTrot.
-- **`caption`** — Displays the comic image with a caption extracted from the RSS description HTML. The caption element is found using a configurable CSS selector (`caption_selector`, defaults to `"em"`). Used by Daily New Yorker Cartoon and Far Side Comic.
+- **`title`** — Displays the comic image with a title bar at the bottom showing the first item's title. Used by Pickles and FoxTrot.
+- **`caption`** — Displays the comic image with a caption extracted from the RSS description HTML. The caption element is found using a configurable CSS selector (`caption_selector`, defaults to `"em"`). Supports simple selectors: `tag` or `tag[style*='keyword']`. Used by Daily New Yorker Cartoon and Far Side Comic.
 - **`panels`** — For multi-panel comics where the RSS description contains multiple `<img>` tags. Displays a single panel selected by `panel_index`. Supports negative indices (`-1` = last panel, `-2` = second to last, etc). Used by ADHDinos.
 
 ## Config Reference (`comics.yml`)
@@ -78,16 +78,17 @@ Each comic entry supports the following fields:
 
 ## Generated Files
 
-For each comic, the generator produces 7 files:
+For each comic, the generator produces 8 files:
 
 | File | Location | Description |
 | --- | --- | --- |
-| `settings.yml` | `<dir>/src/` | Plugin configuration (strategy, polling URL, metadata) |
-| `shared.liquid` | `<dir>/src/` | Main template with CSS, JS, and HTML (pattern-specific) |
-| `full.liquid` | `<dir>/src/` | Full-screen layout entry point |
-| `half_horizontal.liquid` | `<dir>/src/` | Half-horizontal layout entry point |
-| `half_vertical.liquid` | `<dir>/src/` | Half-vertical layout entry point |
-| `quadrant.liquid` | `<dir>/src/` | Quadrant layout entry point |
+| `settings.yml` | `<dir>/src/` | Plugin configuration (strategy, polling URL, metadata, `serverless_language: node`) |
+| `shared.liquid` | `<dir>/src/` | Main template with CSS and HTML (pattern-specific) |
+| `transform.js` | `<dir>/src/` | Node serverless function that parses RSS into `comic` merge variables (pattern-specific) |
+| `full.liquid` | `<dir>/src/` | Layout entry point (NOP — `shared.liquid` renders directly) |
+| `half_horizontal.liquid` | `<dir>/src/` | Layout entry point (NOP) |
+| `half_vertical.liquid` | `<dir>/src/` | Layout entry point (NOP) |
+| `quadrant.liquid` | `<dir>/src/` | Layout entry point (NOP) |
 | `.trmnlp.yml` | `<dir>/` | Local dev server configuration |
 
 All generated files are checked into git. They contain a "DO NOT EDIT DIRECTLY" comment header.
@@ -113,9 +114,13 @@ This means Liquid syntax passes through the Jinja2 templates untouched, while `<
 Located in `_generator/templates/`:
 
 - `settings.yml.j2` — Settings with per-comic variable substitution
-- `layout.liquid.j2` — Static one-liner shared by all layout entry points
-- `shared_title.liquid.j2` — Full `shared.liquid` for the `title` pattern
-- `shared_caption.liquid.j2` — Full `shared.liquid` for the `caption` pattern
+- `layout.liquid.j2` — NOP one-liner shared by all layout entry points
+- `shared_title.liquid.j2` — `shared.liquid` for the `title` pattern
+- `shared_caption.liquid.j2` — `shared.liquid` for the `caption` pattern
+- `shared_panels.liquid.j2` — `shared.liquid` for the `panels` pattern
+- `transform_title.js.j2` — `transform.js` for the `title` pattern
+- `transform_caption.js.j2` — `transform.js` for the `caption` pattern (caption regex injected by generator)
+- `transform_panels.js.j2` — `transform.js` for the `panels` pattern (panel index injected by generator)
 - `trmnlp.yml.j2` — Static `.trmnlp.yml` dev server config
 
 ## Workflow

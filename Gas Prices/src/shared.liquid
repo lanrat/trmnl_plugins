@@ -1,0 +1,116 @@
+{% if gas.error %}
+<div class="layout layout--col gap--space-between">
+  <div class="flex flex--col flex--center-x flex--center-y grow">
+    <span class="title">Gas Prices</span>
+    <span class="description mt--4">{{ gas.error }}</span>
+  </div>
+</div>
+<div class="title_bar">
+  <span class="title">Gas Prices</span>
+</div>
+
+{% elsif gas.stations.size > 0 %}
+
+<style>
+  .station-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px dotted #000;
+  }
+  .station-row:last-child {
+    border-bottom: none;
+  }
+  .station-row.cheapest {
+    border: 2px solid #000;
+    padding: 4px 6px;
+    margin: 0 -6px;
+  }
+  .station-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .station-price {
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .trend-up::after { content: " \25B2"; }
+  .trend-down::after { content: " \25BC"; }
+  .trend-flat::after { content: " \25C6"; }
+  .view--half_vertical .trend-row,
+  .view--quadrant .trend-row {
+    display: none;
+  }
+  .view--quadrant .station-address {
+    display: none;
+  }
+</style>
+
+<div class="layout layout--col gap--space-between">
+  {% if gas.trends.size > 0 %}
+  <div class="trend-row">
+    <div class="grid">
+      <div class="row">
+        <div class="grid grid--cols-{{ gas.trends.size }}">
+          {% for trend in gas.trends %}
+          <div class="item col--span-1">
+            <div class="meta"></div>
+            <div class="content">
+              <span class="value value--xsmall value--tnums" data-value-type="number">
+                ${{ trend.average }}
+              </span>
+              <span class="label">
+                {{ trend.area }}
+                {% if trend.direction == 1 %}<span class="trend-up"></span>
+                {% elsif trend.direction == -1 %}<span class="trend-down"></span>
+                {% else %}<span class="trend-flat"></span>
+                {% endif %}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="grow mt--2" style="overflow-y: hidden;">
+    {% for station in gas.stations %}
+    <div class="station-row{% if forloop.first %} cheapest{% endif %}">
+      <div class="station-info">
+        <span class="description" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">
+          <strong>{{ station.name }}</strong>
+        </span>
+        <span class="description station-address" style="font-size:0.85em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">
+          {{ station.address }}
+        </span>
+      </div>
+      <div class="station-price">
+        <span class="value value--xsmall value--tnums" data-value-type="number">${{ station.price }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Gas Prices — {{ gas.fuel_label }}</span>
+  <span class="instance">{{ gas.search }}</span>
+</div>
+
+{% else %}
+
+<div class="layout layout--col gap--space-between">
+  <div class="flex flex--col flex--center-x flex--center-y grow">
+    <span class="title">Gas Prices</span>
+    <span class="description mt--4">No stations found for "{{ gas.search }}"</span>
+  </div>
+</div>
+<div class="title_bar">
+  <span class="title">Gas Prices</span>
+</div>
+
+{% endif %}

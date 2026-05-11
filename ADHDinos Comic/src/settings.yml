@@ -5,7 +5,7 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: 
+serverless_language: node
 polling_url: https://comiccaster.xyz/feeds/adhdinos.xml
 polling_headers: ''
 polling_body: ''
@@ -19,4 +19,4 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/ADHDinos%20Comic
 name: ADHDinos
-refresh_interval: 720
+refresh_interval: 360
