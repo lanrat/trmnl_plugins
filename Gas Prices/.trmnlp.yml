@@ -16,5 +16,53 @@ custom_fields:
 time_zone: America/Los_Angeles
 
 # override variables
+#
+# Dev fixture: while this `gas:` block is set, trmnlp serve renders against
+# this static data and skips the live GasBuddy call. This avoids tripping
+# Cloudflare's 429 rate limit during rapid local reloads. To exercise the
+# real transform.py / GasBuddy path again, comment out the `gas:` block
+# (leave `trmnl: {}` in place so the section is valid YAML).
 variables:
   trmnl: {}
+  gas:
+    fuel_label: Regular
+    search: '90210'
+    station_count: 8
+    trends:
+      - area: Los Angeles
+        average_display: '6.17'
+        lowest_display: '5.19'
+        direction: -1
+      - area: California
+        average_display: '6.12'
+        lowest_display: '4.49'
+        direction: 1
+      - area: United States
+        average_display: '4.49'
+        lowest_display: ''
+        direction: 1
+    stations:
+      - name: G&M
+        address: 7960 Santa Monica Blvd
+        display: '5.89'
+      - name: Speedway Express
+        address: 8770 W Olympic Blvd
+        display: '5.89'
+      - name: Shell
+        address: 8020 Santa Monica Blvd
+        display: '5.99'
+      - name: Mobil
+        address: 8380 Santa Monica Blvd
+        display: '6.19'
+      - name: Shell
+        address: 391 S Robertson Blvd
+        display: '6.19'
+      - name: '76'
+        address: 7861 Melrose Ave
+        display: '6.19'
+      - name: Chevron
+        address: 8101 W Sunset Blvd
+        display: '6.49'
+      - name: Mobil
+        address: 7865 W Sunset Blvd
+        display: '6.49'

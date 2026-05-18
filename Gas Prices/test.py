@@ -35,7 +35,7 @@ def main():
     }
 
     # Load and execute the transform function
-    with open("src/transform.js") as f:
+    with open("src/transform.py") as f:
         exec(f.read(), globals())
 
     result = run(input_data)  # noqa: F821
@@ -52,14 +52,14 @@ def main():
         print("Trends:")
         for t in gas["trends"]:
             arrow = {1: "UP", -1: "DOWN"}.get(t["direction"], "FLAT")
-            low = f"  low=${t['lowest']}" if t["lowest"] else ""
-            print(f"  {t['area']:20s} avg=${t['average']}{low}  {arrow}")
+            low = f"  low=${t['lowest_display']}" if t["lowest"] else ""
+            print(f"  {t['area']:20s} avg=${t['average_display']}{low}  {arrow}")
         print()
 
     print("Stations (sorted by price):")
     for i, s in enumerate(gas["stations"]):
         marker = " << CHEAPEST" if i == 0 else ""
-        print(f"  ${s['price']:<8} {s['name']:20s} {s['address']}{marker}")
+        print(f"  ${s['display']:<8} {s['name']:20s} {s['address']}{marker}")
 
     print()
     print("Raw JSON:")

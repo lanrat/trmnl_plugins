@@ -45,4 +45,4 @@ custom_fields:
   name: Number of Stations
   description: How many nearby stations to show
 name: Gas Prices
-refresh_interval: 240
+refresh_interval: 720

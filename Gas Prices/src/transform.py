@@ -5,13 +5,24 @@ import urllib.request
 GASBUDDY_GRAPHQL = "https://www.gasbuddy.com/graphql"
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 
+# GasBuddy is fronted by Cloudflare and 403s on Python's default
+# "Python-urllib/x.y" UA. An empty string works from a normal Python process
+# but TRMNL's serverless runtime appears to substitute its own default, so we
+# send a browser UA explicitly. Nominatim also 403s on empty per its usage
+# policy, so geocode() sends an identifying UA.
+GASBUDDY_USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+)
+NOMINATIM_USER_AGENT = "trmnl-gas-prices-plugin"
+
 DEFAULT_HEADERS = {
     "Content-Type": "application/json",
     "apollo-require-preflight": "true",
     "Origin": "https://www.gasbuddy.com",
     "Referer": "https://www.gasbuddy.com/home",
     "gbcsrf": "x",
-    "User-Agent": "",
+    "User-Agent": GASBUDDY_USER_AGENT,
 }
 
 LOCATION_QUERY_PRICES = (
@@ -46,13 +57,31 @@ def geocode(search):
 
     req = urllib.request.Request(
         NOMINATIM_URL + "?" + urllib.parse.urlencode(params),
-        headers={"User-Agent": "trmnl-gas-prices-plugin"},
+        headers={"User-Agent": NOMINATIM_USER_AGENT},
     )
-    with urllib.request.urlopen(req, timeout=4) as resp:
-        results = json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            results = json.loads(resp.read())
+    except Exception:
+        return None, None, None
     if not results:
         return None, None, None
     return float(results[0]["lat"]), float(results[0]["lon"]), results[0].get("display_name", "")
+
+
+def normalize_price(val):
+    """GasBuddy normally returns dollars (e.g. 3.499). Guard against cents."""
+    try:
+        p = float(val)
+    except (TypeError, ValueError):
+        return 0.0
+    if p > 20:  # no US fuel price exceeds $20/gal; assume cents
+        p = p / 100.0
+    return p
+
+
+def format_price(val):
+    return "{:.2f}".format(normalize_price(val))
 
 
 def run(input):
@@ -89,8 +118,11 @@ def run(input):
         headers=DEFAULT_HEADERS,
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=4) as resp:
-        data = json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            data = json.loads(resp.read())
+    except Exception as e:
+        return {"error": "GasBuddy request failed: " + str(e)[:80]}
 
     if "errors" in data:
         return {"error": data["errors"][0].get("message", "API error")}
@@ -109,17 +141,20 @@ def run(input):
             fp = p.get("fuelProduct", "")
             credit = p.get("credit") or {}
             cash = p.get("cash") or {}
-            price_val = credit.get("price") or cash.get("price") or 0
+            raw_price = credit.get("price") or cash.get("price") or 0
+            price_val = normalize_price(raw_price)
             posted = credit.get("postedTime") or cash.get("postedTime")
-            if price_val and price_val > 0:
+            if price_val > 0:
                 all_prices[fp] = {
                     "price": price_val,
+                    "display": format_price(raw_price),
                     "posted": posted,
                     "name": p.get("longName", fp),
                 }
-            if fp == fuel_type and price_val and price_val > 0:
+            if fp == fuel_type and price_val > 0:
                 price_info = {
                     "price": price_val,
+                    "display": format_price(raw_price),
                     "posted": posted,
                 }
 
@@ -130,6 +165,7 @@ def run(input):
             "name": s.get("name", "Unknown"),
             "address": s.get("address", {}).get("line1", ""),
             "price": price_info["price"],
+            "display": price_info["display"],
             "posted": price_info["posted"],
             "all_prices": all_prices,
         })
@@ -141,10 +177,14 @@ def run(input):
     # Parse trends
     trend_data = []
     for t in trends:
+        avg = t.get("today", 0)
+        low = t.get("todayLow", 0)
         trend_data.append({
             "area": t.get("areaName", ""),
-            "average": t.get("today", 0),
-            "lowest": t.get("todayLow", 0),
+            "average": normalize_price(avg),
+            "average_display": format_price(avg) if avg else "",
+            "lowest": normalize_price(low),
+            "lowest_display": format_price(low) if low else "",
             "direction": t.get("trend", 0),
         })
 
