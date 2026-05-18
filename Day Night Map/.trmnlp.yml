@@ -7,7 +7,13 @@ watch:
   - src
 
 # values of custom fields (defined in src/settings.yml)
-custom_fields: {}
+custom_fields:
+  latitude: '37.76'
+  longitude: '-122.48'
+  showloc: showloc
+  nosun: moon
+  nomoon: moon
+  hour24: hour12
 
 # Time zone IANA identifier injected into trmnl.user
 time_zone: America/Los_Angeles

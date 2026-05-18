@@ -1,5 +1,6 @@
-import requests
 import json
+import urllib.parse
+import urllib.request
 
 GASBUDDY_GRAPHQL = "https://www.gasbuddy.com/graphql"
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
@@ -43,14 +44,12 @@ def geocode(search):
     else:
         params["q"] = search
 
-    resp = requests.get(
-        NOMINATIM_URL,
-        params=params,
+    req = urllib.request.Request(
+        NOMINATIM_URL + "?" + urllib.parse.urlencode(params),
         headers={"User-Agent": "trmnl-gas-prices-plugin"},
-        timeout=4,
     )
-    resp.raise_for_status()
-    results = resp.json()
+    with urllib.request.urlopen(req, timeout=4) as resp:
+        results = json.loads(resp.read())
     if not results:
         return None, None, None
     return float(results[0]["lat"]), float(results[0]["lon"]), results[0].get("display_name", "")
@@ -84,14 +83,14 @@ def run(input):
         },
     }
 
-    resp = requests.post(
+    req = urllib.request.Request(
         GASBUDDY_GRAPHQL,
-        data=json.dumps(query),
+        data=json.dumps(query).encode("utf-8"),
         headers=DEFAULT_HEADERS,
-        timeout=4,
+        method="POST",
     )
-    resp.raise_for_status()
-    data = resp.json()
+    with urllib.request.urlopen(req, timeout=4) as resp:
+        data = json.loads(resp.read())
 
     if "errors" in data:
         return {"error": data["errors"][0].get("message", "API error")}
