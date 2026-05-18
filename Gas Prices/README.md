@@ -1,4 +1,3 @@
-<!-- TODO: add icon.png -->
 # [Gas Prices](https://trmnl.com/recipes/273126?ref=mrlanrat)
 
 Nearby gas station prices and area trends via [GasBuddy](https://www.gasbuddy.com/).
