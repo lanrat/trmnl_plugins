@@ -10,7 +10,7 @@ Each plugin is in its own folder, and is synced both to github and to the Trmnl 
 `trmnlp.sh` is a wrapper around the `trmnl/trmnlp` Docker container that syncs plugin files with the TRMNL API. Requires `trmnl.env` with `TRMNL_API_KEY` (auto-created on first run).
 
 ```bash
-./trmnlp.sh <plugin-dir> <command>
+./trmnlp.sh [-y|--yes] <plugin-dir> <command>
 ```
 
 Commands:
@@ -19,6 +19,10 @@ Commands:
 - `serve` — Local dev server at <http://localhost:4567>
 - `pull` — Download plugin from TRMNL server
 - `push` — Upload plugin to TRMNL server
+
+Flags:
+
+- `-y` / `--yes` — Auto-confirm the overwrite prompt on `push`/`pull` (useful when running on all plugins with `.`)
 
 Use `.` as plugin-dir to run on all plugins (any dir containing `src/settings.yml`).
 `./trmnlp.sh pull` (no plugin-dir) updates the Docker image itself.
