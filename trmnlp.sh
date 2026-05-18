@@ -50,6 +50,10 @@ run_plugin() {
     plugin_name="${plugin_name// /_}"
     echo "Running on plugin: $plugin_path"
 
+    # Ensure Ctrl-C tears down the container even if the entrypoint ignores SIGINT.
+    local container_name="trmnlp-${plugin_name}"
+    trap 'docker kill "'"$container_name"'" >/dev/null 2>&1 || true; trap - INT; exit 130' INT
+
     # With -y/--yes, auto-confirm overwrite prompts on push/pull by piping "y" via stdin (no TTY).
     local docker_tty="-it"
     local auto_yes=0
@@ -62,7 +66,7 @@ run_plugin() {
         # Disable pipefail locally: `yes` exits with SIGPIPE when docker closes stdin,
         # which would otherwise abort the surrounding loop under `set -o pipefail`.
         set +o pipefail
-        yes | docker run $docker_tty --rm --name "trmnlp-${plugin_name}" \
+        yes | docker run $docker_tty --init --sig-proxy=false --rm --name "$container_name" \
             --publish 4567:4567 \
             --env-file "$SCRIPT_DIR/trmnl.env" \
             --user "$(id -u):$(id -g)" \
@@ -73,7 +77,7 @@ run_plugin() {
         set -o pipefail
         return $rc
     else
-        docker run $docker_tty --rm --name "trmnlp-${plugin_name}" \
+        docker run $docker_tty --init --sig-proxy=false --rm --name "$container_name" \
             --publish 4567:4567 \
             --env-file "$SCRIPT_DIR/trmnl.env" \
             --user "$(id -u):$(id -g)" \
