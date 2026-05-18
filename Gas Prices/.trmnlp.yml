@@ -12,6 +12,9 @@ custom_fields:
   fuel_type: regular_gas
   num_stations: '8'
 
+# Time zone IANA identifier injected into trmnl.user
+time_zone: America/Los_Angeles
+
 # override variables
 variables:
   trmnl: {}
