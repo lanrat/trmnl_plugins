@@ -28,55 +28,14 @@
 </style>
 <div class="view bg-white">
   <div class="image-container" id="image-container">
-    {% if rss.channel.item[0] %}
-    <img class="image image-dither" id="comic"/>
+    {% if comic.image_url %}
+    <img class="image image-dither" src="{{ comic.image_url }}" id="comic"/>
     {% else %}
     <p class="text--black">Error Loading Twonks...</p>
     {% endif %}
   </div>
   <div class="title_bar" id="info">
-    <span class="text-stroke" id="name">
-      {{rss.channel.title}}</span>
-    <span class="instance text-stroke" id="lego-meta">
-      {% if rss.channel.item[0].title %}{{rss.channel.item[0].title}}{% endif %}
-    </span>
+    <span class="text-stroke" id="name">{{ channel_title }}</span>
+    <span class="instance text-stroke" id="lego-meta">{{ comic.title }}</span>
   </div>
 </div>
-
-{% comment %} 
-Inject the Liquid variable safely into a template tag.
-{% endcomment %}
-<template style="display:none" id="html-parser-template" >
-  {{rss.channel.item[0].description}}
-</template>
-
-<script>
-  // Wait for the DOM to load to ensure the template element exists
-  document.addEventListener('DOMContentLoaded', function() {
-
-    // Target the template
-    const template = document.getElementById('html-parser-template');
-
-    if (template) {
-      // Access the DOM structure inside the template
-      const templateContent = template.content;
-
-      // Find the first <img> tag within that content
-      const imgElement = templateContent.querySelector('img');
-
-      if (imgElement) {
-        // Extract the URL! 
-        // Note: The browser has automatically decoded the &amp; and handled the quotes.
-        const imageUrl = imgElement.src; 
-
-        //console.log("Successfully extracted URL:", imageUrl);
-
-        // Set it as the source of a real, visible image on the page:
-        document.getElementById('comic').src = imageUrl;
-
-      } else {
-        console.log("No image tag was found in the provided Liquid string.");
-      }
-    }
-  });
-</script>
