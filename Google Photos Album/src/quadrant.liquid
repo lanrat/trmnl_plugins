@@ -1,0 +1,2 @@
+{% assign mode = trmnl.plugin_settings.custom_fields_values.display_mode | default: 'fill' %}
+{% render "google_photos" image_base: image_base, error: error, mode: mode, device_w: trmnl.device.width, device_h: trmnl.device.height %}

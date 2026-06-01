@@ -1,2 +1,3 @@
 trmnl.env
 _generator/.venv/
+__pycache__/

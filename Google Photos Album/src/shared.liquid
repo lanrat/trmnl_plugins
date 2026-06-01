@@ -1,0 +1,72 @@
+{% template google_photos %}
+{% comment %}
+  Size the Google Photos request to this device's actual screen so every panel —
+  including large ones (TRMNL XL, Inkplate 13) and any future display — renders
+  crisply without upscaling. device_w/device_h come from trmnl.device, passed in
+  by the layout (trmnl isn't visible inside a {% render %} scope). fill uses
+  Google's -c (server crop to the exact size); contain fits within the box.
+{% endcomment %}
+{% assign mode = mode | default: 'fill' %}
+{% assign dw = device_w | default: 800 | plus: 0 %}
+{% assign dh = device_h | default: 480 | plus: 0 %}
+{% if dw < 200 %}{% assign dw = 800 %}{% endif %}
+{% if dh < 200 %}{% assign dh = 480 %}{% endif %}
+{% assign img = '' %}
+{% if image_base and image_base != '' %}
+  {% if mode == 'contain' %}
+    {% assign img = image_base | append: '=w' | append: dw | append: '-h' | append: dh %}
+  {% else %}
+    {% assign img = image_base | append: '=w' | append: dw | append: '-h' | append: dh | append: '-c' %}
+  {% endif %}
+{% endif %}
+<div class="view bg-white">
+  {% if img != '' %}
+  <img src="{{ img }}" class="image image-dither gp-photo gp-{{ mode }}" alt="Google Photos" />
+  {% else %}
+  <div class="gp-error">
+    <p class="title title--small text--center">Couldn't load album</p>
+    <p class="description clamp--none text--center">{{ error | default: 'Add a public Google Photos album URL in the plugin settings.' }}</p>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  .view {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: white;
+  }
+
+  /* Full-bleed image. object-fit preserves aspect ratio in both modes,
+     so the image is never stretched. */
+  .gp-photo {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Fill: cover the whole screen, cropping 2 edges if needed. */
+  .gp-fill {
+    object-fit: cover;
+  }
+
+  /* Contain: show the entire photo, leaving white bars on 2 edges. */
+  .gp-contain {
+    object-fit: contain;
+  }
+
+  .gp-error {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+  }
+</style>
+{% endtemplate %}

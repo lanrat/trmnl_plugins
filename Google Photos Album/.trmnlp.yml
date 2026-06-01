@@ -1,0 +1,22 @@
+# TRMNLP configuration
+# {{ env.VARIABLE }} interpolation is available here
+---
+# auto-reload when files change (`watch: false` to disable)
+watch:
+  - .trmnlp.yml
+  - src
+
+# values of custom fields (defined in src/settings.yml)
+# Paste a PUBLIC Google Photos album URL here to test extraction locally,
+# then restart `serve` (custom field changes are read at startup).
+custom_fields:
+  # this is a test album
+  album_url: 'https://photos.app.goo.gl/5N7ixRAXzU1LHG8L6'
+  display_mode: fill
+
+# Time zone IANA identifier injected into trmnl.user
+time_zone: America/Los_Angeles
+
+# override variables
+variables:
+  trmnl: {}

@@ -1,0 +1,36 @@
+---
+strategy: polling
+no_screen_padding: 'yes'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 3.1.1
+serverless_language: python
+polling_url: ''
+polling_headers: ''
+polling_body: ''
+id: 321608
+custom_fields:
+- keyname: doesnt_matter
+  name: Google Photos Album
+  category: images
+  field_type: author_bio
+  description: Displays a random photo from a public Google Photos album
+  github_url: https://github.com/lanrat/trmnl_plugins
+  learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Google%20Photos%20Album
+- keyname: album_url
+  name: Public Album URL
+  field_type: string
+  description: 'Share link of a PUBLIC Google Photos album (set sharing to "anyone with the link"). Example: https://photos.app.goo.gl/...'
+  placeholder: https://photos.app.goo.gl/xxxxxxxxxxxx
+  required: true
+- keyname: display_mode
+  name: Display Mode
+  field_type: select
+  description: 'Fill: photo covers the whole screen, may crop 2 edges. Contain: whole photo shown with white bars on 2 edges. Images are never stretched.'
+  options:
+  - fill: fill
+  - contain: contain
+  default: fill
+name: Google Photos Album
+refresh_interval: 15
