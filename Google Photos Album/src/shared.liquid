@@ -25,7 +25,7 @@
   {% else %}
   <div class="gp-error">
     <p class="title title--small text--center">Couldn't load album</p>
-    <p class="description clamp--none text--center">{{ error | default: 'Add a public Google Photos album URL in the plugin settings.' }}</p>
+    <p class="description clamp--none text--center">{{ error | default: 'Add a public Google Photos album URL in the plugin settings.' | escape }}</p>
   </div>
   {% endif %}
 </div>

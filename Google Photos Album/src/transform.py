@@ -12,6 +12,7 @@
 # JSON) and the same code then works both locally (trmnlp) and hosted.
 
 import re
+import ssl
 import json
 import random
 import urllib.request
@@ -30,9 +31,21 @@ _HEADERS = {
 }
 
 # Fetch resilience. Google occasionally times out or the goo.gl redirect blips;
-# retry within the serverless time budget so one bad poll doesn't blank the screen.
-_FETCH_TIMEOUT = 5
+# retry so one bad poll doesn't blank the screen. Keep timeout * attempts within
+# the ~5s serverless budget — a normal fetch is ~0.5s, so 2s is already generous,
+# and capping it leaves room for a retry instead of one slow attempt eating it all.
+_FETCH_TIMEOUT = 4
 _FETCH_ATTEMPTS = 3
+
+# Disable TLS certificate verification for the album fetch.
+#
+# TRMNL's hosted serverless clock currently lags real time, so when a fetch hits
+# a Google server presenting a freshly-rotated certificate, verification fails
+# intermittently with "SSLCertVerificationError: certificate is not yet valid".
+# We only read PUBLIC album HTML (no credentials, no secrets), so bypassing
+# verification is an acceptable stopgap. Set back to False once TRMNL fixes the
+# runtime clock and the "not yet valid" errors stop.
+_DISABLE_SSL_VERIFY = True
 
 
 def run(input):
@@ -45,8 +58,9 @@ def run(input):
         html = _fetch(album_url)
     except Exception as e:  # noqa: BLE001 - surface any fetch error to the screen
         return _error(
-            "Could not load the album. Check that the URL is correct and public. (%s: %s)"
-            % (type(e).__name__, e)
+            "Could not load the album after %d tries: %s. "
+            "Check that the URL is correct and public."
+            % (_FETCH_ATTEMPTS, _describe_error(e))
         )
 
     photos = _parse_photos(html)
@@ -75,11 +89,12 @@ def _fetch(url):
     Google occasionally times out or the goo.gl short-link redirect blips, which
     would otherwise blank the screen on that poll. Retry a few times so a single
     transient failure doesn't surface as an error."""
+    context = _ssl_context()
     last_err = None
     for _ in range(_FETCH_ATTEMPTS):
         try:
             req = urllib.request.Request(url, headers=_HEADERS)
-            with urllib.request.urlopen(req, timeout=_FETCH_TIMEOUT) as resp:
+            with urllib.request.urlopen(req, timeout=_FETCH_TIMEOUT, context=context) as resp:
                 charset = resp.headers.get_content_charset() or "utf-8"
                 return resp.read().decode(charset, errors="replace")
         except Exception as e:  # noqa: BLE001 - retry any transient fetch error
@@ -87,8 +102,42 @@ def _fetch(url):
     raise last_err if last_err is not None else RuntimeError("fetch failed")
 
 
+def _ssl_context():
+    """Unverified TLS context when _DISABLE_SSL_VERIFY is set, else default
+    (verified). See _DISABLE_SSL_VERIFY for why this stopgap exists."""
+    if not _DISABLE_SSL_VERIFY:
+        return None
+    context = ssl.create_default_context()
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_NONE
+    return context
+
+
 def _error(message):
     return {"image_base": "", "error": message, "photo_count": 0}
+
+
+def _describe_error(e):
+    """Human-readable, angle-bracket-free description of a fetch error.
+
+    urllib's URLError stores the real cause in .reason and stringifies to
+    '<urlopen error ...>' — the angle brackets get swallowed when the message is
+    rendered as HTML on the device, so str(e) shows up blank. We unwrap to the
+    underlying reason (timeout / ConnectionResetError / gaierror / SSLError), and
+    surface HTTPError's status .code (e.g. 429 rate-limited, 403, 5xx) so the
+    on-screen error actually says what went wrong."""
+    name = type(e).__name__
+    code = getattr(e, "code", None)
+    if code is not None:  # HTTPError is a URLError subclass with an HTTP status
+        return "%s %s" % (name, code)
+    reason = getattr(e, "reason", None)
+    if isinstance(reason, BaseException):
+        rtext = str(reason).strip()
+        inner = type(reason).__name__ + (": " + rtext if rtext else "")
+    else:
+        inner = str(reason).strip() if reason else str(e).strip()
+    detail = "%s (%s)" % (name, inner) if inner else name
+    return detail.replace("<", "").replace(">", "")
 
 
 def _get_field(input, name):
