@@ -6,8 +6,8 @@ static_data: ''
 polling_verb: get
 framework_version: 2.3.7
 serverless_language: node
-polling_url: https://nitter.net/twonkscomics/rss
-polling_headers: User-Agent=FreshRSS
+polling_url: https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=twonks.bsky.social&limit=20&filter=posts_with_media
+polling_headers: ''
 polling_body: ''
 id: 272414
 custom_fields:

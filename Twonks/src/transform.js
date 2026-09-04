@@ -1,42 +1,69 @@
-function transform(input) {
-  const channel = (input && input.rss && input.rss.channel) || (input && input.channel) || {};
-  const rawItems = channel.item;
-  const items = Array.isArray(rawItems) ? rawItems : (rawItems ? [rawItems] : []);
+// Serverless transform for the Twonks Comics plugin.
+//
+// Source history: the plugin used to poll a Nitter RSS mirror of @twonkscomics
+// on X. Nitter shut down (the feed now 410s) and twonkscomics.com is no longer
+// registered, so the feed is taken from Bluesky instead — Steve Nelson posts
+// each comic to @twonks.bsky.social, and the public AppView API needs no auth:
+//
+//   https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed
+//     ?actor=twonks.bsky.social&limit=20&filter=posts_with_media
+//
+// Output contract is unchanged from the RSS version: { comic, channel_title }.
 
-  const txt = (v) => {
-    if (v == null) return '';
-    if (typeof v === 'string') return v;
-    if (typeof v === 'object') return v._text || v['#text'] || v.__cdata || v._cdata || '';
-    return String(v);
+function transform(input) {
+  const feed = (input && Array.isArray(input.feed)) ? input.feed : [];
+
+  // Bluesky attaches images either directly (app.bsky.embed.images#view) or
+  // nested under a quote post (app.bsky.embed.recordWithMedia#view).
+  const imagesOf = (embed) => {
+    if (!embed) return [];
+    if (Array.isArray(embed.images)) return embed.images;
+    if (embed.media && Array.isArray(embed.media.images)) return embed.media.images;
+    return [];
   };
 
-  // Nitter marks video posts with a literal "<br>Video<br>" in the description;
-  // the <img> in those is just a video thumbnail, not the comic.
-  const isVideo = (desc) => /<br\s*\/?>\s*Video\s*<br\s*\/?>/i.test(desc);
+  // at://did:.../app.bsky.feed.post/<rkey> -> a browsable bsky.app permalink
+  const webLink = (post) => {
+    const handle = (post.author && (post.author.handle || post.author.did)) || 'twonks.bsky.social';
+    const rkey = String(post.uri || '').split('/').pop();
+    return rkey ? `https://bsky.app/profile/${handle}/post/${rkey}` : '';
+  };
 
   let chosen = null;
   let imageUrl = null;
-  for (const item of items) {
-    const desc = txt(item.description);
-    if (isVideo(desc)) continue;
-    const m = desc.match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (!m) continue;
-    chosen = item;
-    imageUrl = m[1];
+  for (const entry of feed) {
+    // Skip reposts (someone else's art) and replies (usually chatter, not a strip).
+    if (!entry || entry.reason) continue;
+    const post = entry.post;
+    if (!post || !post.record || post.record.reply) continue;
+
+    const img = imagesOf(post.embed)[0];
+    if (!img || !img.fullsize) continue;
+
+    chosen = post;
+    imageUrl = img.fullsize;
     break;
   }
 
+  // Read the name off the chosen post, not feed[0] — a repost at the top of the
+  // feed would otherwise put someone else's display name in the title bar.
+  const channelTitle = (chosen && chosen.author && chosen.author.displayName) || 'Twonks';
+
   if (!chosen) {
-    return { comic: { title: '', link: '', pub_date: '', image_url: null }, channel_title: txt(channel.title) };
+    return { comic: { title: '', link: '', pub_date: '', image_url: null }, channel_title: channelTitle };
   }
+
+  // Post text is the caption/title; keep the first line so long captions don't
+  // overflow the title bar.
+  const title = String(chosen.record.text || '').split('\n')[0].trim();
 
   return {
     comic: {
-      title: txt(chosen.title),
-      link: txt(chosen.link),
-      pub_date: txt(chosen.pubDate),
+      title: title,
+      link: webLink(chosen),
+      pub_date: chosen.record.createdAt || chosen.indexedAt || '',
       image_url: imageUrl
     },
-    channel_title: txt(channel.title)
+    channel_title: channelTitle
   };
 }
