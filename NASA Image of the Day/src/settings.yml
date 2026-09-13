@@ -5,7 +5,7 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: 
+serverless_language:
 polling_url: https://www.nasa.gov/feeds/iotd-feed/
 polling_headers: ''
 polling_body: ''
@@ -27,4 +27,5 @@ custom_fields:
   name: Show Title Bar
   description: Show the NASA logo and image title at the bottom
 name: NASA Image of the Day
+description:
 refresh_interval: 480

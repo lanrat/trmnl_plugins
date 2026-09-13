@@ -5,7 +5,7 @@ dark_mode: 'no'
 static_data: "{}"
 polling_verb: get
 framework_version: 2.3.7
-serverless_language: 
+serverless_language:
 polling_url: https://www.comicsrss.com/rss/beware-of-toddler.rss
 polling_headers: ''
 polling_body: ''
@@ -19,4 +19,5 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Beware%20of%20Toddler%20Comic
 name: Beware of Toddler Comic
+description:
 refresh_interval: 480

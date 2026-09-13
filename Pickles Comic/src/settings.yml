@@ -19,4 +19,5 @@ custom_fields:
   github_url: https://github.com/lanrat/trmnl_plugins
   learn_more_url: https://github.com/lanrat/trmnl_plugins/tree/main/Pickles%20Comic
 name: Pickles Comic
+description:
 refresh_interval: 360

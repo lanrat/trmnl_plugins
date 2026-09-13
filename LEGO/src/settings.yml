@@ -10,6 +10,26 @@ polling_url: https://trmnl.com/custom_plugin_example_data.json
 polling_headers: ''
 polling_body: ''
 id: 269418
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
 custom_fields:
 - keyname: doesnt_matter
   name: Random LEGO
@@ -17,7 +37,7 @@ custom_fields:
   category: images
   description: Display a random LEGO Minifig or Set from Rebrickable.
   github_url: https://github.com/lanrat/trmnl_plugins
-  learn_more_url: 
+  learn_more_url:
 - keyname: dataset
   field_type: select
   name: Catalog
@@ -27,4 +47,5 @@ custom_fields:
   - Minifigs
   default: Sets
 name: Random LEGO
+description:
 refresh_interval: 240
