@@ -27,6 +27,16 @@ Flags:
 Use `.` as plugin-dir to run on all plugins (any dir containing `src/settings.yml`).
 `./trmnlp.sh pull` (no plugin-dir) updates the Docker image itself.
 
+## CI (GitHub Actions)
+
+`.github/workflows/trmnl.yml` is adapted from the workflow template trmnlp scaffolds, using the pinned `TRMNLP_IMAGE`:
+
+- **Every PR/push**: `trmnlp lint` on all plugins. Accept a pre-existing finding by listing its rule ID under `ignored_lint_rules` in the plugin's `.trmnlp.yml`
+- **Push to `main`**: `trmnlp push --force` on plugins whose `src/` changed (`.github/scripts/trmnl-plugins.sh` selects them)
+- **Manual run** (Actions → TRMNL → Run workflow, `main` only): push one plugin by folder name, or `all`
+- Needs the `TRMNL_API_KEY` repository secret. Pushing refuses plugins without an `id` in `settings.yml` (trmnlp would create a new plugin)
+- CI overwrites the server copy, so git is the source of truth — pull any edits made in the TRMNL web editor before merging
+
 ## Plugin Architecture
 
 ### Template Structure

@@ -1,0 +1,113 @@
+# Based on the workflow template that trmnlp scaffolds
+# (https://github.com/usetrmnl/trmnlp#continuous-integration),
+# adapted for a repo holding many plugins.
+#
+# - Pull requests: lint every plugin.
+# - Push to main: push plugins whose src/ changed to TRMNL.
+# - Manual run (main only): push one plugin by folder name, or "all".
+#
+# Requires the TRMNL_API_KEY repository secret (https://trmnl.com/account).
+name: TRMNL
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: 'Plugin folder to push (e.g. "Day Night Map"), or "all"'
+        required: true
+        default: all
+
+permissions:
+  contents: read
+
+env:
+  # Pinned so CI only changes when the version is bumped here.
+  TRMNLP_IMAGE: trmnl/trmnlp:v0.31.0
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: trmnlp lint
+        run: |
+          status=0
+          while IFS= read -r plugin; do
+            echo "::group::$plugin"
+            if ! docker run --rm --volume "$PWD/$plugin:/plugin" "$TRMNLP_IMAGE" lint; then
+              echo "::error title=trmnlp lint::$plugin failed lint"
+              status=1
+            fi
+            echo "::endgroup::"
+          done < <(.github/scripts/trmnl-plugins.sh all)
+          exit $status
+
+  push:
+    needs: lint
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: trmnl-push
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Select plugins
+        env:
+          PLUGIN: ${{ inputs.plugin }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            .github/scripts/trmnl-plugins.sh "$PLUGIN" > "$RUNNER_TEMP/plugins.txt"
+          else
+            .github/scripts/trmnl-plugins.sh changed "$BEFORE" "$GITHUB_SHA" > "$RUNNER_TEMP/plugins.txt"
+          fi
+          if [[ -s "$RUNNER_TEMP/plugins.txt" ]]; then
+            echo "Plugins to push:"
+            cat "$RUNNER_TEMP/plugins.txt"
+          else
+            echo "No plugin changes to push"
+          fi
+      - name: trmnlp push
+        env:
+          TRMNL_API_KEY: ${{ secrets.TRMNL_API_KEY }}
+        run: |
+          if [[ ! -s "$RUNNER_TEMP/plugins.txt" ]]; then
+            exit 0
+          fi
+          if [[ -z "$TRMNL_API_KEY" ]]; then
+            echo "::error::TRMNL_API_KEY secret is not set"
+            exit 1
+          fi
+          status=0
+          while IFS= read -r plugin; do
+            echo "::group::$plugin"
+            # Without an id, trmnlp push creates a new plugin on every run.
+            if ! grep -qE '^id: *[0-9]+' "$plugin/src/settings.yml"; then
+              echo "::error title=trmnlp push::$plugin has no id in src/settings.yml, refusing to create a new plugin"
+              status=1
+            elif ! docker run --rm \
+                --user "$(id -u):$(id -g)" \
+                --env HOME=/tmp \
+                --env TRMNL_API_KEY \
+                --volume "$PWD/$plugin:/plugin" \
+                "$TRMNLP_IMAGE" push --force; then
+              echo "::error title=trmnlp push::$plugin failed to push"
+              status=1
+            fi
+            echo "::endgroup::"
+          done < "$RUNNER_TEMP/plugins.txt"
+          exit $status
+      # trmnlp push rewrites src/settings.yml with the server's copy.
+      # A diff here means the server normalized something worth pulling back.
+      - name: Check server settings.yml
+        if: always()
+        run: |
+          if ! git diff --exit-code --stat; then
+            git diff
+            echo "::warning title=settings.yml drift::Server copy of settings.yml differs from git; consider running trmnlp pull"
+          fi

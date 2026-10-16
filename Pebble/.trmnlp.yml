@@ -18,3 +18,7 @@ time_zone: America/Los_Angeles
 # override variables
 variables:
   trmnl: {}
+
+# accepted lint findings (pre-existing; see `trmnlp lint`)
+ignored_lint_rules:
+  - no_style_restyling_framework

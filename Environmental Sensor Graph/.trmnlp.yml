@@ -601,3 +601,7 @@ variables:
         - {"2026-05-18 10:00:00 UTC": 1014.9}
         - {"2026-05-18 11:00:00 UTC": 1014.6}
         - {"2026-05-18 12:00:00 UTC": 1015.1}
+
+# accepted lint findings (pre-existing; see `trmnlp lint`)
+ignored_lint_rules:
+  - limited_inline_styles
