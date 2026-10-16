@@ -53,30 +53,30 @@ custom_fields:
 - keyname: showloc
   field_type: select
   options:
-  - true: showloc
-  - false: hideloc
+  - 'Yes': showloc
+  - 'No': hideloc
   default: showloc
   name: Show Location Dot
   description: show point on map at latitude/longitude
 - keyname: nosun
   field_type: select
   options:
-  - true: nosun
-  - false: moon
-  default: moon
+  - 'Yes': nosun
+  - 'No': sun
+  default: sun
   name: Hide Sun on map
 - keyname: nomoon
   field_type: select
   options:
-  - true: nomoon
-  - false: moon
+  - 'Yes': nomoon
+  - 'No': moon
   default: moon
   name: Hide Moon on map
 - keyname: hour24
   field_type: select
   options:
-  - true: hour24
-  - false: hour12
+  - 'Yes': hour24
+  - 'No': hour12
   default: hour12
   name: 24 Hour Mode
 name: Day Night Map
