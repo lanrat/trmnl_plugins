@@ -14,6 +14,7 @@
 import re
 import ssl
 import json
+import time
 import random
 import urllib.request
 
@@ -31,11 +32,13 @@ _HEADERS = {
 }
 
 # Fetch resilience. Google occasionally times out or the goo.gl redirect blips;
-# retry so one bad poll doesn't blank the screen. Keep timeout * attempts within
-# the ~5s serverless budget — a normal fetch is ~0.5s, so 2s is already generous,
-# and capping it leaves room for a retry instead of one slow attempt eating it all.
-_FETCH_TIMEOUT = 4
+# retry so one bad poll doesn't blank the screen. TRMNL kills the transform at
+# 5s, so all attempts share one overall deadline (leaving time to parse the
+# ~1MB page) instead of each attempt getting a full timeout. A normal fetch is
+# ~0.5-0.9s, so 2s per attempt is generous and still leaves room for a retry.
+_FETCH_TIMEOUT = 2
 _FETCH_ATTEMPTS = 3
+_FETCH_DEADLINE = 3.5
 
 # Disable TLS certificate verification for the album fetch.
 #
@@ -58,9 +61,9 @@ def run(input):
         html = _fetch(album_url)
     except Exception as e:  # noqa: BLE001 - surface any fetch error to the screen
         return _error(
-            "Could not load the album after %d tries: %s. "
+            "Could not load the album: %s. "
             "Check that the URL is correct and public."
-            % (_FETCH_ATTEMPTS, _describe_error(e))
+            % _describe_error(e)
         )
 
     photos = _parse_photos(html)
@@ -90,16 +93,20 @@ def _fetch(url):
     would otherwise blank the screen on that poll. Retry a few times so a single
     transient failure doesn't surface as an error."""
     context = _ssl_context()
+    deadline = time.monotonic() + _FETCH_DEADLINE
     last_err = None
     for _ in range(_FETCH_ATTEMPTS):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0.25:
+            break
         try:
             req = urllib.request.Request(url, headers=_HEADERS)
-            with urllib.request.urlopen(req, timeout=_FETCH_TIMEOUT, context=context) as resp:
+            with urllib.request.urlopen(req, timeout=min(_FETCH_TIMEOUT, remaining), context=context) as resp:
                 charset = resp.headers.get_content_charset() or "utf-8"
                 return resp.read().decode(charset, errors="replace")
         except Exception as e:  # noqa: BLE001 - retry any transient fetch error
             last_err = e
-    raise last_err if last_err is not None else RuntimeError("fetch failed")
+    raise last_err if last_err is not None else TimeoutError("ran out of time")
 
 
 def _ssl_context():
