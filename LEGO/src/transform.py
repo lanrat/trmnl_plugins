@@ -19,10 +19,17 @@ def run(input):
 
   with gzip.open(io.BytesIO(content), "rt", encoding="utf-8") as f:
     reader = csv.DictReader(f)
-    sets = [row for row in reader if row.get("img_url") and (not row.get("num_parts") or int(row["num_parts"]) > 1000)]
+    rows = [row for row in reader if row.get("img_url")]
 
-    chosen = random.choice(sets)
+  # only show large sets; minifigs never reach this part count
+  if dataset == "sets":
+    rows = [row for row in rows if not row.get("num_parts") or int(row["num_parts"]) > 1000]
 
-    return {
-      "lego": chosen
-    }
+  if not rows:
+    raise ValueError(f"no rows with images in dataset {dataset}")
+
+  chosen = random.choice(rows)
+
+  return {
+    "lego": chosen
+  }
