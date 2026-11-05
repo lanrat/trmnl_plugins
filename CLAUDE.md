@@ -5,6 +5,10 @@ TRMNL is an e-ink display device designed to help users stay focused and calm by
 
 Each plugin is in its own folder, and is synced both to github and to the Trmnl API.
 
+## Issue Template
+
+`.github/ISSUE_TEMPLATE/bug_report.yml` has a **Plugin** dropdown listing every plugin by its `name:` from `src/settings.yml` (the name users see on TRMNL), sorted alphabetically with `Other / not sure` last. When a plugin is added, renamed, or removed, update that dropdown to match.
+
 ## trmnlp Sync Tool
 
 `trmnlp.sh` is a wrapper around the `trmnl/trmnlp` Docker container that syncs plugin files with the TRMNL API. Requires `trmnl.env` with `TRMNL_API_KEY` (auto-created on first run).
