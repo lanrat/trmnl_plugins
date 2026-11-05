@@ -6,6 +6,10 @@ A collection of custom plugins for [TRMNL](https://trmnl.com/recipes?user_id=100
 
 This repository contains various TRMNL plugins, each in its own directory. Each plugin directory includes a README.md file with detailed information about the plugin's functionality and configuration settings.
 
+## Report a Problem
+
+Having trouble with one of these plugins? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml) and tell us which plugin, along with a screenshot and your plugin settings.
+
 ## Development
 
 ### Prerequisites

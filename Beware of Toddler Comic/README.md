@@ -11,3 +11,7 @@ This plugin fetches and displays the latest Beware of Toddler comic from the Com
 ## Settings
 
 No custom settings required.
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Beware%20of%20Toddler%20Comic&title=%5BBeware%20of%20Toddler%20Comic%5D%20) and include a screenshot and your plugin settings.

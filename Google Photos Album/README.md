@@ -10,3 +10,7 @@ Turns your TRMNL into an ever-changing photo frame, showing a different random p
 
 - **Public Album URL**: Share link to a public Google Photos album, set to "anyone with the link" (e.g. `https://photos.app.goo.gl/...`)
 - **Display Mode**: `fill` (cover the screen, may crop 2 edges) or `contain` (show the whole photo with white bars on 2 edges)
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Google%20Photos%20Public%20Album&title=%5BGoogle%20Photos%20Public%20Album%5D%20) and include a screenshot and your plugin settings.

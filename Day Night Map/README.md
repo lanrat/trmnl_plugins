@@ -16,3 +16,7 @@ This plugin displays a live world map showing current day and night zones based 
 - **Hide Sun on map**: Option to hide the sun position indicator
 - **Hide Moon on map**: Option to hide the moon position indicator
 - **24 Hour Mode**: Toggle between 12-hour and 24-hour time format
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Day%20Night%20Map&title=%5BDay%20Night%20Map%5D%20) and include a screenshot and your plugin settings.

@@ -13,3 +13,7 @@ This plugin displays current gas prices for nearby stations and area price trend
 - **ZIP Code or City**: Your ZIP code or city name to search nearby stations (e.g., 90210, Denver CO)
 - **Fuel Type**: Which fuel type to display (regular, midgrade, premium, or diesel)
 - **Number of Stations**: How many nearby stations to show (5, 8, or 10)
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Gas%20Prices&title=%5BGas%20Prices%5D%20) and include a screenshot and your plugin settings.

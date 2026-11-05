@@ -13,3 +13,7 @@ Shows a randomized grid of items from the repebble appstore — Pebble's communi
 - **Feed** — `most-loved` (top picks by hearts) or `all` (every app)
 - **Sort** — when Feed is `all`: `updated` (recently updated) or `released` (recently released)
 - **Content Type** — `both`, `watchfaces`, or `apps`
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Pebble%20Appstore&title=%5BPebble%20Appstore%5D%20) and include a screenshot and your plugin settings.

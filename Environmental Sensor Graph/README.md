@@ -14,3 +14,7 @@ This plugin graphs data from connected environmental sensors including temperatu
 - **Period (Days)**: Number of days of history to show (1-7)
 - **Units**: Unit system for display (Imperial: °F, inHg | Metric: °C, hPa)
 - **Show Prior Period?**: Overlay the previous period as a second line for comparison
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Environmental%20Sensor%20Graph&title=%5BEnvironmental%20Sensor%20Graph%5D%20) and include a screenshot and your plugin settings.

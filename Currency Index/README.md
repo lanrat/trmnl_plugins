@@ -13,3 +13,7 @@ This plugin displays a historical chart of currency exchange rates over a config
 - **Base Currency**: The reference currency — all others shown relative to this (USD, EUR, GBP, JPY, CHF, CAD, AUD)
 - **Currencies to Track**: Comma-separated list of currency codes to display (e.g., EUR,GBP,JPY,CAD,AUD,CNY)
 - **Period (Days)**: How many days of history to show (7, 30, 90, 180, or 365)
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Currency%20Index&title=%5BCurrency%20Index%5D%20) and include a screenshot and your plugin settings.

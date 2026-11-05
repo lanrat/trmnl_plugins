@@ -11,3 +11,7 @@ This plugin dynamically fetches the most recent Daily Cartoon from The New Yorke
 ## Settings
 
 No custom settings required.
+
+## Report a Problem
+
+Something not working? [Open an issue](https://github.com/lanrat/trmnl_plugins/issues/new?template=bug_report.yml&plugin=Daily%20New%20Yorker%20Cartoon&title=%5BDaily%20New%20Yorker%20Cartoon%5D%20) and include a screenshot and your plugin settings.
