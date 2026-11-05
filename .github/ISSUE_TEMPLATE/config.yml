@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: TRMNL device or account help
+    url: https://help.trmnl.com/
+    about: Problems with the device itself, Wi-Fi, playlists, or your TRMNL account (not a specific plugin)
+  - name: Browse all plugins
+    url: https://trmnl.com/recipes?user_id=10066
+    about: See every plugin from this repo on TRMNL

@@ -1,0 +1,112 @@
+name: Plugin problem
+description: Something is wrong with one of these TRMNL plugins
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this! This repo holds several plugins, so please tell us which one and include what you see on screen.
+
+        Before filing, try clicking **Force Refresh** on the plugin's settings page in TRMNL. If TRMNL says the plugin is in a *degraded state*, see [Plugin in a Degraded State (Reset)](https://help.trmnl.com/en/articles/12384091-plugin-in-a-degraded-state-reset).
+
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Names match the recipe names on TRMNL.
+      options:
+        - ADHDinos
+        - Beware of Toddler Comic
+        - Currency Index
+        - Daily B.C. Comic
+        - Daily Doonesbury Comic
+        - Daily For Better or For Worse Comic
+        - Daily Luann Comic
+        - Daily New Yorker Cartoon
+        - Daily Non Sequitur Comic
+        - Daily Pearls Before Swine Comic
+        - Day Night Map
+        - Environmental Sensor Graph
+        - Far Side Comic
+        - FoxTrot Classics Comic
+        - Gas Prices
+        - Google Photos Public Album
+        - Litterbox Comics
+        - MakerWorld Trending Models
+        - NASA Image of the Day
+        - Pebble Appstore
+        - Pickles Comic
+        - Random LEGO
+        - Twonks Comics
+        - XKCD Comic (with hover text)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What do you see, and what did you expect to see instead?
+      placeholder: e.g. The same comic has been on screen every day since Monday.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: |
+        Drag and drop an image here. A screenshot of the plugin preview from the TRMNL web dashboard works best; a photo of the device is fine too.
+    validations:
+      required: true
+
+  - type: textarea
+    id: settings
+    attributes:
+      label: Plugin settings
+      description: |
+        The values you chose on the plugin's settings page in TRMNL. Some settings are personal (ZIP code, latitude/longitude, album link), so leave out or round anything you'd rather not share publicly.
+      placeholder: |
+        Fuel Type: regular
+        Number of Stations: 8
+      render: text
+
+  - type: dropdown
+    id: layout
+    attributes:
+      label: Layout
+      description: How is the plugin shown on your device?
+      options:
+        - Full screen
+        - Mashup (half or quarter screen)
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device
+      options:
+        - TRMNL OG
+        - TRMNL X
+        - BYOD / other e-ink device
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: timing
+    attributes:
+      label: When did it start, and does it happen every time?
+      description: The "last refreshed" time from the plugin's settings page is also helpful here.
+      placeholder: Started around Nov 1. Last refreshed shows 3 days ago. Force Refresh did not change anything.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Things I've tried
+      options:
+        - label: I clicked **Force Refresh** on the plugin's settings page
+        - label: Other plugins on my device are updating normally
